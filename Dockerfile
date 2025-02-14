@@ -5,8 +5,8 @@ ARG CARES_VERSION=1.34.4
 ARG CURL_VERSION=8.11.1
 ARG MKTORRENT_VERSION=v1.1
 
-# v5.1.5
-ARG RUTORRENT_VERSION=25679a45a1e2ca9f7a9e01cab5cc554b8eaa7230
+# ruTorrent v5.1.5; https://github.com/drrako/ruTorrent/; drrako-main branch
+ARG RUTORRENT_VERSION=8fd830f7b5a0c4a822df754531d7d1d1bf230aaa
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
 # v0.15.1
@@ -33,12 +33,12 @@ ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-libtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent"
+RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
 ARG LIBTORRENT_VERSION
 RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent"
+RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
 ARG RTORRENT_VERSION
 RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
@@ -48,7 +48,7 @@ ARG MKTORRENT_VERSION
 RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rutorrent
-RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
+RUN git init . && git remote add origin "https://github.com/drrako/ruTorrent.git"
 ARG RUTORRENT_VERSION
 RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN rm -rf .git* conf/users plugins/geoip share
