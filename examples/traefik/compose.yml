@@ -1,0 +1,112 @@
+name: rtorrent-rutorrent
+
+services:
+  traefik:
+    image: traefik:2.5
+    container_name: traefik
+    command:
+      - "--global.checknewversion=false"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--entrypoints.http=true"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.https=true"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@example.com"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--providers.docker"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+    networks:
+      - rtorrent-rutorrent
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+    volumes:
+      - "./acme.json:/acme.json"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always
+
+  geoip-updater:
+    image: crazymax/geoip-updater:latest
+    container_name: geoip-updater
+    networks:
+      - rtorrent-rutorrent
+    volumes:
+      - "./data/geoip:/data"
+    env_file:
+      - "./geoip-updater.env"
+    restart: always
+
+  rtorrent-rutorrent:
+    image: crazymax/rtorrent-rutorrent:latest
+    container_name: rtorrent-rutorrent
+    networks:
+      - rtorrent-rutorrent
+    expose:
+      - "${RT_DHT_PORT}/udp"
+      - "${XMLRPC_PORT}"
+      - "${RUTORRENT_PORT}"
+      - "${WEBDAV_PORT}"
+      - "${RT_INC_PORT}"
+    ports:
+      - target: ${RT_DHT_PORT}
+        published: ${RT_DHT_PORT}
+        protocol: udp
+      - target: ${RT_INC_PORT}
+        published: ${RT_INC_PORT}
+        protocol: tcp
+    env_file:
+      - "rtorrent-rutorrent.env"
+      - ".env"
+    volumes:
+      - "./data:/data"
+      - "./downloads:/downloads"
+      - "./passwd:/passwd"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rutorrent.entrypoints=https"
+      - "traefik.http.routers.rutorrent.rule=Host(`rutorrent.example.com`)"
+      - "traefik.http.routers.rutorrent.tls=true"
+      - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.rutorrent.tls.domains[0].main=rutorrent.example.com"
+      - "traefik.http.routers.rutorrent.service=rutorrent"
+      - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
+      - "traefik.http.routers.webdav.entrypoints=https"
+      - "traefik.http.routers.webdav.rule=Host(`webdav.example.com`)"
+      - "traefik.http.routers.webdav.tls=true"
+      - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.webdav.tls.domains[0].main=webdav.example.com"
+      - "traefik.http.routers.webdav.service=webdav"
+      - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+    restart: always
+
+  rtorrent-logs:
+    image: bash
+    container_name: rtorrent-rutorrent-logs
+    command: bash -c 'tail -f /log/*.log'
+    network_mode: none
+    depends_on:
+      - rtorrent-rutorrent
+    volumes:
+      - "./data/rtorrent/log:/log"
+    restart: always
+
+networks:
+  rtorrent-rutorrent:
+    name: rtorrent-rutorrent
