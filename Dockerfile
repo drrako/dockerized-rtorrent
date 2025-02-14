@@ -4,15 +4,14 @@ ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.34.4
 ARG CURL_VERSION=8.11.1
 ARG MKTORRENT_VERSION=v1.1
-ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 # v5.1.5
 ARG RUTORRENT_VERSION=25679a45a1e2ca9f7a9e01cab5cc554b8eaa7230
-ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# v7.2-0.9.8-0.13.8
-ARG RTORRENT_STICKZ_VERSION=2f99fa971d65aabc14a367ef077be58cd859bc79
+# v0.15.1
+ARG LIBTORRENT_VERSION=6f414ea97f0576ea9bd1fdefb9161a6e7991f1af
+ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
 
 ARG ALPINE_VERSION=3.21
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -33,36 +32,26 @@ FROM src AS src-curl
 ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
+FROM src AS src-libtorrent
+RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent"
+ARG LIBTORRENT_VERSION
+RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/stickz/rtorrent.git"
-ARG RTORRENT_STICKZ_VERSION
-RUN git fetch origin "${RTORRENT_STICKZ_VERSION}" && git checkout -q FETCH_HEAD
+RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent"
+ARG RTORRENT_VERSION
+RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-mktorrent
 RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
 ARG MKTORRENT_VERSION
 RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
-FROM src AS src-geoip2-phpext
-RUN git init . && git remote add origin "https://github.com/rlerdorf/geoip.git"
-ARG GEOIP2_PHPEXT_VERSION
-RUN git fetch origin "${GEOIP2_PHPEXT_VERSION}" && git checkout -q FETCH_HEAD
-
 FROM src AS src-rutorrent
 RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
 RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN rm -rf .git* conf/users plugins/geoip share
-
-FROM src AS src-geoip2-rutorrent
-RUN git init . && git remote add origin "https://github.com/Micdu70/geoip2-rutorrent.git"
-ARG GEOIP2_RUTORRENT_VERSION
-RUN git fetch origin "${GEOIP2_RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN rm -rf .git*
-
-FROM src AS src-mmdb
-RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
-  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
 FROM src AS src-dump-torrent
 RUN git init . && git remote add origin "https://github.com/TheGoblinHero/dumptorrent.git"
@@ -81,7 +70,6 @@ RUN apk --update --no-cache add \
     cppunit-dev \
     cmake \
     gd-dev \
-    geoip-dev \
     libtool \
     libxslt-dev \
     linux-headers \
@@ -123,11 +111,9 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/rtorrent
-COPY --from=src-rtorrent /src .
-
 WORKDIR /usr/local/src/rtorrent/libtorrent
-RUN ./autogen.sh
+COPY --from=src-libtorrent /src .
+RUN autoreconf -fi
 RUN ./configure --enable-aligned --disable-instrumentation --enable-udns
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
@@ -135,7 +121,8 @@ RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent/rtorrent
-RUN ./autogen.sh
+COPY --from=src-rtorrent /src .
+RUN autoreconf -fi
 RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
@@ -153,19 +140,6 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/geoip2-phpext
-COPY --from=src-geoip2-phpext /src .
-RUN <<EOT
-  set -e
-  phpize83
-  ./configure
-  make
-  make install
-EOT
-RUN mkdir -p ${DIST_PATH}/usr/lib/php83/modules
-RUN cp -f /usr/lib/php83/modules/geoip.so ${DIST_PATH}/usr/lib/php83/modules/
-RUN tree ${DIST_PATH}
-
 WORKDIR /usr/local/src/dump-torrent
 COPY --from=src-dump-torrent /src .
 RUN make dumptorrent -j$(nproc)
@@ -175,11 +149,8 @@ RUN tree ${DIST_PATH}
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
-COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
-COPY --from=src-mmdb /src /var/mmdb
 
-ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
-  S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   S6_KILL_GRACETIME="10000" \
   TZ="UTC" \
   PUID="1000" \
@@ -204,17 +175,12 @@ RUN apk --update --no-cache add \
     brotli \
     ca-certificates \
     coreutils \
-    ffmpeg \
     findutils \
-    geoip \
     grep \
     gzip \
     libstdc++ \
-    mediainfo \
     ncurses \
     nginx \
-    nginx-mod-http-dav-ext \
-    nginx-mod-http-geoip2 \
     openssl \
     php83 \
     php83-bcmath \
@@ -231,8 +197,6 @@ RUN apk --update --no-cache add \
     php83-sockets \
     php83-xml \
     php83-zip \
-    python3 \
-    py3-pip \
     shadow \
     sox \
     tar \
@@ -241,8 +205,6 @@ RUN apk --update --no-cache add \
     unzip \
     util-linux \
     zip \
-  && pip3 install --upgrade --break-system-packages pip \
-  && pip3 install --break-system-packages cfscrape cloudscraper \
   && addgroup -g ${PGID} rtorrent \
   && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
   && curl --version \

@@ -19,7 +19,6 @@ XMLRPC_SIZE_LIMIT=${XMLRPC_SIZE_LIMIT:-1M}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
-WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
 
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
@@ -54,8 +53,6 @@ XMLRPC_PORT=${XMLRPC_PORT:-8000}
 XMLRPC_HEALTH_PORT=$((XMLRPC_PORT + 1))
 RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
 RUTORRENT_HEALTH_PORT=$((RUTORRENT_PORT + 1))
-WEBDAV_PORT=${WEBDAV_PORT:-9000}
-WEBDAV_HEALTH_PORT=$((WEBDAV_PORT + 1))
 
 # WAN IP
 if [ -z "$WAN_IP" ] && [ -n "$WAN_IP_CMD" ]; then
@@ -116,13 +113,6 @@ sed -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
   -e "s!@RUTORRENT_HEALTH_PORT@!$RUTORRENT_HEALTH_PORT!g" \
   /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
 
-# Nginx WebDAV
-echo "Setting Nginx WebDAV configuration..."
-sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
-  -e "s!@WEBDAV_PORT@!$WEBDAV_PORT!g" \
-  -e "s!@WEBDAV_HEALTH_PORT@!$WEBDAV_HEALTH_PORT!g" \
-  /tpls/etc/nginx/conf.d/webdav.conf > /etc/nginx/conf.d/webdav.conf
-
 # Healthcheck
 echo "Update healthcheck script..."
 cat > /usr/local/bin/healthcheck <<EOL
@@ -134,15 +124,11 @@ curl --fail -d "<?xml version='1.0'?><methodCall><methodName>system.api_version<
 
 # ruTorrent / PHP
 curl --fail http://127.0.0.1:${RUTORRENT_HEALTH_PORT}/ping
-
-# WebDAV
-curl --fail http://127.0.0.1:${WEBDAV_HEALTH_PORT}
 EOL
 
 # Init
 echo "Initializing files and folders..."
-mkdir -p /data/geoip \
-  /data/rtorrent/log \
+mkdir -p /data/rtorrent/log \
   /data/rtorrent/.session \
   /data/rtorrent/watch \
   /data/rutorrent/conf/users \
@@ -150,12 +136,9 @@ mkdir -p /data/geoip \
   /data/rutorrent/plugins-conf \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
-  /data/rutorrent/themes \
-  /downloads/complete \
-  /downloads/temp
+  /data/rutorrent/themes
 touch /passwd/rpc.htpasswd \
   /passwd/rutorrent.htpasswd \
-  /passwd/webdav.htpasswd \
   /data/rtorrent/log/rtorrent.log \
   "${RU_LOG_FILE}"
 rm -f /data/rtorrent/.session/rtorrent.lock
@@ -170,11 +153,6 @@ if [ ! -s "/passwd/rutorrent.htpasswd" ]; then
   echo "rutorrent.htpasswd is empty, removing authentication..."
   sed -i "s!auth_basic .*!#auth_basic!g" /etc/nginx/conf.d/rutorrent.conf
   sed -i "s!auth_basic_user_file.*!#auth_basic_user_file!g" /etc/nginx/conf.d/rutorrent.conf
-fi
-if [ ! -s "/passwd/webdav.htpasswd" ]; then
-  echo "webdav.htpasswd is empty, removing authentication..."
-  sed -i "s!auth_basic .*!#auth_basic!g" /etc/nginx/conf.d/webdav.conf
-  sed -i "s!auth_basic_user_file.*!#auth_basic_user_file!g" /etc/nginx/conf.d/webdav.conf
 fi
 
 # rTorrent local config
@@ -380,28 +358,12 @@ for theme in ${themes}; do
   chown -R nobody:nogroup "/var/www/rutorrent/plugins/theme/themes/${theme}"
 done
 
-echo "Setting GeoIP2 databases for geoip2 plugin..."
-if [ -d "/var/www/rutorrent/plugins/geoip2" ]; then
-  if [ ! "$(ls -A /data/geoip)" ]; then
-    cp -f /var/mmdb/*.mmdb /data/geoip/
-  fi
-  ln -sf /data/geoip/GeoLite2-ASN.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-ASN.mmdb
-  ln -sf /data/geoip/GeoLite2-City.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-City.mmdb
-  ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-Country.mmdb
-else
-  echo "  WARNING: geoip2 plugin does not exist"
-fi
-
 echo "Fixing perms..."
 chown rtorrent:rtorrent \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
-  /downloads \
-  /downloads/complete \
-  /downloads/temp \
   "${RU_LOG_FILE}"
 chown -R rtorrent:rtorrent \
-  /data/geoip \
   /data/rtorrent/log \
   /data/rtorrent/.session \
   /data/rtorrent/watch \

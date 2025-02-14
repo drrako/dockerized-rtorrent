@@ -34,7 +34,6 @@ ___
   * [Command line](#command-line)
 * [Notes](#notes)
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
-  * [WebDAV](#webdav)
   * [Populate .htpasswd files](#populate-htpasswd-files)
   * [Bootstrap config `.rtlocal.rc`](#bootstrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
@@ -60,7 +59,6 @@ ___
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
-* WebDAV on completed downloads (basic auth optional)
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
 * ruTorrent [GeoIP2 plugin](https://github.com/Micdu70/geoip2-rutorrent)
@@ -128,8 +126,6 @@ linux/arm64
 * `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `1M`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
 * `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
-* `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default `WebDAV restricted access`)
-* `WEBDAV_PORT`: WebDAV port on completed downloads (default `9000`)
 
 ### rTorrent
 
@@ -178,10 +174,9 @@ linux/arm64
 * `6881` (or `RT_DHT_PORT`): DHT UDP port (`dht.port.set`)
 * `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
 * `8080` (or `RUTORRENT_PORT`): ruTorrent HTTP port
-* `9000` (or `WEBDAV_PORT`): WebDAV port on completed downloads
 * `50000` (or `RT_INC_PORT`): Incoming connections (`network.port_range.set`)
 
-> :warning: Port p+1 defined for `XMLRPC_PORT`, `RUTORRENT_PORT` and `WEBDAV_PORT` will also be reserved for
+> :warning: Port p+1 defined for `XMLRPC_PORT` and `RUTORRENT_PORT` will also be reserved for
 > healthcheck. (e.g. if you define `RUTORRENT_PORT=8080`, port `8081` will be reserved)
 
 ## Usage
@@ -231,27 +226,19 @@ through port `8000`. These requests can be secured with basic authentication
 through the `/passwd/rpc.htpasswd` file in which you will need to add a username
 with his password. See below to populate this file with a user / password.
 
-### WebDAV
-
-WebDAV allows you to retrieve your completed torrent files in `/downloads/complete`
-on port `9000`. Like XMLRPC, these requests can be secured with basic authentication
-through the `/passwd/webdav.htpasswd` file in which you will need to add a
-username with his password. See below to populate this file with a user / password.
-
 ### Populate .htpasswd files
 
-For ruTorrent basic auth, XMLRPC through nginx and WebDAV on completed downloads,
+For ruTorrent basic auth and XMLRPC through nginx 
 you can populate `.htpasswd` files with the following command:
 
 ```
-docker run --rm -it httpd:2.4-alpine htpasswd -Bbn <username> <password> >> $(pwd)/passwd/webdav.htpasswd
+docker run --rm -it httpd:2.4-alpine htpasswd -Bbn <username> <password> >> $(pwd)/passwd/rutorrent.htpasswd
 ```
 
 Htpasswd files used:
 
 * `rpc.htpasswd`: XMLRPC through nginx
 * `rutorrent.htpasswd`: ruTorrent basic auth
-* `webdav.htpasswd`: WebDAV on completed downloads
 
 ### Bootstrap config `.rtlocal.rc`
 
