@@ -1,22 +1,13 @@
-<p align="center"><a href="https://github.com/crazy-max/docker-rtorrent-rutorrent" target="_blank"><img height="128" src="https://raw.githubusercontent.com/crazy-max/docker-rtorrent-rutorrent/master/.github/docker-rtorrent-rutorrent.jpg"></a></p>
-
 <p align="center">
-  <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-rtorrent-rutorrent?label=version&style=flat-square" alt="Latest Version"></a>
-  <a href="https://github.com/crazy-max/docker-rtorrent-rutorrent/actions?workflow=build"><img src="https://img.shields.io/github/actions/workflow/status/crazy-max/docker-rtorrent-rutorrent/build.yml?branch=master&label=build&logo=github&style=flat-square" alt="Build Status"></a>
-  <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/stars/crazymax/rtorrent-rutorrent.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
-  <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent-rutorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
-  <br /><a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>
-  <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
+  <a href="https://hub.docker.com/r/rakshasa/rtorrent/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version"></a>
+  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/stars/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
+  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 </p>
 
 ## About
 
-[stickz rTorrent](https://github.com/stickz/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
+[Vanilla rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
 Docker image.
-
-> [!TIP] 
-> Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun)
-> project!
 
 ___
 
@@ -52,24 +43,20 @@ ___
 
 * Run as non-root user
 * Multi-platform image
-* Latest rTorrent and libTorrent from [rTorrent stickz](https://github.com/stickz/rtorrent) project.
-  * Includes significant performance and stability improvements.
-  * Includes compatibility with Link Time Optimizations.
+* Latest [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent) project.
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
-* ruTorrent [GeoIP2 plugin](https://github.com/Micdu70/geoip2-rutorrent)
 * [mktorrent](https://github.com/pobrn/mktorrent) installed for ruTorrent create plugin
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
-* [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
 
 ## Build locally
 
 ```shell
-git clone https://github.com/crazy-max/docker-rtorrent-rutorrent.git
+git clone https://github.com/drrako/docker-rtorrent-rutorrent.git
 cd docker-rtorrent-rutorrent
 
 # Build image and output to docker (default)
@@ -86,13 +73,12 @@ docker buildx bake image-all
 
 | Registry                                                                                                      | Image                                   |
 |---------------------------------------------------------------------------------------------------------------|-----------------------------------------|
-| [Docker Hub](https://hub.docker.com/r/crazymax/rtorrent-rutorrent/)                                           | `crazymax/rtorrent-rutorrent`           |
-| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/rtorrent-rutorrent) | `ghcr.io/crazy-max/rtorrent-rutorrent`  |
+| [Docker Hub](https://hub.docker.com/r/drrako/rtorrent/)                                                       | `drrako/rtorrent-rutorrent`             |
 
 Following platforms for this image are available:
 
 ```
-$ docker buildx imagetools inspect crazymax/rtorrent-rutorrent --format "{{json .Manifest}}" | \
+$ docker buildx imagetools inspect drrako/rtorrent --format "{{json .Manifest}}" | \
   jq -r '.manifests[] | select(.platform.os != null and .platform.os != "unknown") | .platform | "\(.os)/\(.architecture)\(if .variant then "/" + .variant else "" end)"'
 
 linux/amd64
@@ -203,7 +189,7 @@ You can also use the following minimal command:
 ```shell
 mkdir data downloads passwd
 chown ${PUID}:${PGID} data downloads passwd
-docker run -d --name rtorrent_rutorrent \
+docker run -d --name rtorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
   -p 6881:6881/udp \
@@ -214,7 +200,7 @@ docker run -d --name rtorrent_rutorrent \
   -v $(pwd)/data:/data \
   -v $(pwd)/downloads:/downloads \
   -v $(pwd)/passwd:/passwd \
-  crazymax/rtorrent-rutorrent:latest
+  drrako/rtorrent:latest
 ```
 
 ## Notes
@@ -398,15 +384,6 @@ To upgrade, pull the newer image and launch the container:
 docker compose pull
 docker compose up -d
 ```
-
-## Contributing
-
-Want to contribute? Awesome! The most basic way to show your support is to star
-the project, or to raise issues. You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max)
-or by making a [PayPal donation](https://www.paypal.me/crazyws) to ensure this
-journey continues indefinitely!
-
-Thanks again for your support, it is much appreciated! :pray:
 
 ## License
 
