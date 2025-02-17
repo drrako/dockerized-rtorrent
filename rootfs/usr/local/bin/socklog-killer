@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-check_processes() {
+is_processes_active() {
     if ! pgrep -f "s6-supervise rtorrent" > /dev/null && \
        ! pgrep -f "s6-supervise php-fpm" > /dev/null && \
        ! pgrep -f "s6-supervise nginx" > /dev/null; then
@@ -12,7 +12,7 @@ check_processes() {
 kill_socklog() {
     pid=$(pgrep -f "socklog unix /dev/log")
     if [ -n "$pid" ]; then
-        echo "Killing socklog process with PID: $pid"
+        echo "Killing socklog unix process with PID: $pid"
         kill -9 "$pid"
     else
         echo "socklog process not found"
@@ -32,7 +32,7 @@ while true; do
 done
 
 while true; do
-    if ! check_processes; then
+    if ! is_processes_active; then
         kill_socklog
     fi
     sleep 2
