@@ -20,6 +20,7 @@ XMLRPC_SIZE_LIMIT=${XMLRPC_SIZE_LIMIT:-1M}
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
 
+RT_DEFAULT_DIR=${RT_DEFAULT_DIR:-/downloads}
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
@@ -130,7 +131,6 @@ EOL
 echo "Initializing files and folders..."
 mkdir -p /data/rtorrent/log \
   /data/rtorrent/.session \
-  /data/rtorrent/watch \
   /data/rutorrent/conf/users \
   /data/rutorrent/plugins \
   /data/rutorrent/plugins-conf \
@@ -166,6 +166,7 @@ sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   -e "s!@RT_SEND_BUFFER_SIZE@!$RT_SEND_BUFFER_SIZE!g" \
   -e "s!@RT_RECEIVE_BUFFER_SIZE@!$RT_RECEIVE_BUFFER_SIZE!g" \
   -e "s!@RT_PREALLOCATE_TYPE@!$RT_PREALLOCATE_TYPE!g" \
+  -e "s!@RT_DEFAULT_DIR@!$RT_DEFAULT_DIR!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
@@ -366,7 +367,6 @@ chown rtorrent:rtorrent \
 chown -R rtorrent:rtorrent \
   /data/rtorrent/log \
   /data/rtorrent/.session \
-  /data/rtorrent/watch \
   /data/rutorrent/conf \
   /data/rutorrent/plugins \
   /data/rutorrent/plugins-conf \
