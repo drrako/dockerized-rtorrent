@@ -129,6 +129,7 @@ linux/arm64
 
 ### rTorrent
 
+* `RT_DEFAULT_DIR`: Sets the default download directory (default `/downloads`)
 * `RT_LOG_LEVEL`: rTorrent log level (default `info`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
@@ -251,11 +252,8 @@ properties of this file:
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
   * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
   * `cfg.download`: Download directory (`/downloads/`)
-  * `cfg.download_complete`: Completed downloads (`/downloads/complete/`)
-  * `cfg.download_temp`:  Downloads in progress (`/downloads/temp/`)
   * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
   * `cfg.session`: Session directory (`/data/rtorrent/.session/`)
-  * `cfg.watch`: Watch directory for torrents (`/data/rtorrent/watch/`)
   * `cfg.rundir`: Runtime data of rtorrent (`/var/run/rtorrent/`)
 * `d.data_path`: Config var to get the full path of data of a torrent (workaround for the possibly empty `d.base_path` attribute)
 * `directory.default.set`: Default directory to save the downloaded torrents (`cfg.download_temp`)

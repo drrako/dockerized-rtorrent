@@ -51,7 +51,7 @@ FROM src AS src-rutorrent
 RUN git init . && git remote add origin "https://github.com/drrako/ruTorrent.git"
 ARG RUTORRENT_VERSION
 RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN rm -rf .git* conf/users plugins/geoip share
+RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
 
 FROM src AS src-dump-torrent
 RUN git init . && git remote add origin "https://github.com/TheGoblinHero/dumptorrent.git"
@@ -212,7 +212,7 @@ RUN apk --update --no-cache add \
 
 COPY rootfs /
 
-VOLUME [ "/data", "/downloads", "/passwd" ]
+VOLUME [ "/data", "/passwd" ]
 ENTRYPOINT [ "/init" ]
 
 HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
