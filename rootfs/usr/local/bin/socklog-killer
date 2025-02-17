@@ -20,7 +20,6 @@ kill_socklog() {
 }
 
 echo "socklog-killer: launching socklog shutdown killer script, waiting for rtorrent to start.."
-#!/bin/bash
 
 while true; do
     s6-svwait /var/run/s6/services/rtorrent > /dev/null 2>&1
