@@ -1,14 +1,21 @@
-<p align="center">
-  <a href="https://hub.docker.com/r/rakshasa/rtorrent/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version"></a>
-  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/stars/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
-  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
+<p style="width: 100%; margin: 0;">
+  <span style="display: inline-block; vertical-align: middle;">
+    <h3 style="display: inline; margin: 0;">Dockerized rTorrent</h3>
+  </span>
+  <span style="display: inline-block; float: right; vertical-align: middle;">
+    <a href="https://github.com/rakshasa/rtorrent">
+      <img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version">
+    </a>
+    <a href="https://github.com/Novik/ruTorrent">
+      <img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version">
+    </a>
+    <a href="https://hub.docker.com/r/drrako/rtorrent/">
+      <img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls">
+    </a>
+  </span>
 </p>
 
-## About
-
-[Vanilla rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
-Docker image.
-
+Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
 ___
 
 * [Features](#features)
@@ -41,23 +48,22 @@ ___
 
 ## Features
 
-* Run as non-root user
 * Multi-platform image
-* Latest [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent) project.
+* Compatible with Sonarr/Radarr
+* Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
-* Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
+* Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
 * [mktorrent](https://github.com/pobrn/mktorrent) installed for ruTorrent create plugin
-* [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
 
 ## Build locally
 
 ```shell
-git clone https://github.com/drrako/docker-rtorrent-rutorrent.git
-cd docker-rtorrent-rutorrent
+git clone https://github.com/drrako/dockerized-rtorrent.git
+cd dockerized-rtorrent
 
 # Build image and output to docker (default)
 docker buildx bake
@@ -73,7 +79,7 @@ docker buildx bake image-all
 
 | Registry                                                                                                      | Image                                   |
 |---------------------------------------------------------------------------------------------------------------|-----------------------------------------|
-| [Docker Hub](https://hub.docker.com/r/drrako/rtorrent/)                                                       | `drrako/rtorrent-rutorrent`             |
+| [Docker Hub](https://hub.docker.com/r/drrako/rtorrent/)                                                       | `drrako/rtorrent`                       |
 
 Following platforms for this image are available:
 
@@ -105,13 +111,18 @@ linux/arm64
 * `AUTH_DELAY`: The time in seconds to wait for Basic Auth (default `0s`)
 * `REAL_IP_FROM`: Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
 * `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
-* `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `LOG_ACCESS`: Output access log (default `true`)
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default `rTorrent XMLRPC restricted access`)
 * `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default `8000`)
 * `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `1M`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
 * `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
+
+### Nginx
+
+* `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
+* `NGINX_WORKER_PROCESSES`: Number of nginx worker processes (default `2`, set `auto` to utilize all cores)
+* `NGINX_WORKER_CONNECTIONS`: Number of nginx worker connections (default `1024`)
 
 ### rTorrent
 
@@ -150,7 +161,6 @@ linux/arm64
 ## Volumes
 
 * `/data`: rTorrent / ruTorrent config, session files, log, ...
-* `/downloads`: Downloaded files
 * `/passwd`: Contains htpasswd files for basic auth
 
 > :warning: Note that the volumes should be owned by the user/group with the specified `PUID` and `PGID`. If you don't
@@ -237,12 +247,11 @@ properties of this file:
 * `system.daemon.set = true`: Launcher rTorrent as a daemon
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
   * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
-  * `cfg.download`: Download directory (`/downloads/`)
   * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
   * `cfg.session`: Session directory (`/data/rtorrent/.session/`)
   * `cfg.rundir`: Runtime data of rtorrent (`/var/run/rtorrent/`)
 * `d.data_path`: Config var to get the full path of data of a torrent (workaround for the possibly empty `d.base_path` attribute)
-* `directory.default.set`: Default directory to save the downloaded torrents (`cfg.download_temp`)
+* `directory.default.set`: Default directory to save the downloaded torrents, set `RT_DEFAULT_DIR` env variable
 * `session.path.set`: Default session directory (`cfg.session`)
 * PID file to `/var/run/rtorrent/rtorrent.pid`
 * `network.scgi.open_local`: SCGI local socket and make it group-writable and secure
