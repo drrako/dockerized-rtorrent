@@ -1,19 +1,16 @@
-<p style="width: 100%; margin: 0;">
-  <span style="display: inline-block; vertical-align: middle;">
-    <h3 style="display: inline; margin: 0;">Dockerized rTorrent</h3>
-  </span>
-  <span style="display: inline-block; float: right; vertical-align: middle;">
-    <a href="https://github.com/rakshasa/rtorrent">
-      <img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version">
-    </a>
-    <a href="https://github.com/Novik/ruTorrent">
-      <img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version">
-    </a>
-    <a href="https://hub.docker.com/r/drrako/rtorrent/">
-      <img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls">
-    </a>
-  </span>
+<p align='left'>                                   
+  <a href="https://github.com/rakshasa/rtorrent">
+    <img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version">
+  </a>
+  <a href="https://github.com/Novik/ruTorrent">
+    <img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version">
+  </a>
+  <a href="https://hub.docker.com/r/drrako/rtorrent/">
+    <img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls">
+  </a>
 </p>
+
+### Dockerized rTorrent
 
 Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
 ___
