@@ -12,7 +12,7 @@
 
 ### Dockerized rTorrent
 
-Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
+Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
 ___
 
 * [Features](#features)
@@ -46,12 +46,13 @@ ___
 ## Features
 
 * Multi-platform image
-* Compatible with Sonarr/Radarr
+* Provides flexibility with download folder structure, compatible with Sonarr/Radarr
 * Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
+* Excludes `_cloudflare`/`mediainfo`/`screenshots` ruTorrent plugins in order to make image smaller
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
 * [mktorrent](https://github.com/pobrn/mktorrent) installed for ruTorrent create plugin
