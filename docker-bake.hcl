@@ -1,5 +1,5 @@
 variable "DEFAULT_TAG" {
-  default = "rtorrent-rutorrent:local"
+  default = "rtorrent:local"
 }
 
 // Special target: https://github.com/docker/metadata-action#bake-definition

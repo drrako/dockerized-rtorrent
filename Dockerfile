@@ -9,7 +9,7 @@ ARG MKTORRENT_VERSION=v1.1
 ARG RUTORRENT_VERSION=8fd830f7b5a0c4a822df754531d7d1d1bf230aaa
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# v0.15.1
+# rtorrent + libtorrent v0.15.1
 ARG LIBTORRENT_VERSION=6f414ea97f0576ea9bd1fdefb9161a6e7991f1af
 ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
 
@@ -81,7 +81,6 @@ RUN apk --update --no-cache add \
     php83-pear \
     tar \
     tree \
-    udns-dev \
     xz \
     zlib-dev
 
@@ -114,7 +113,7 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/rtorrent/libtorrent
 COPY --from=src-libtorrent /src .
 RUN autoreconf -fi
-RUN ./configure --enable-aligned --disable-instrumentation --enable-udns
+RUN ./configure --enable-aligned --disable-instrumentation
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
@@ -201,7 +200,6 @@ RUN apk --update --no-cache add \
     sox \
     tar \
     tzdata \
-    udns \
     unzip \
     util-linux \
     zip \
