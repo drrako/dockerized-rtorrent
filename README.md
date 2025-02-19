@@ -1,16 +1,8 @@
 <p align='left'>                                   
-  <a href="https://github.com/rakshasa/rtorrent">
-    <img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version">
-  </a>
-  <a href="https://github.com/Novik/ruTorrent">
-    <img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version">
-  </a>
-  <a href="https://hub.docker.com/r/drrako/rtorrent/">
-    <img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size">
-  </a>
-  <a href="https://hub.docker.com/r/drrako/rtorrent/">
-    <img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls">
-  </a>
+  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?label=version&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version"></a>
+  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
+  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 </p>
 
 ### Dockerized rTorrent
