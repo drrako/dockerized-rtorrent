@@ -28,8 +28,8 @@ ___
 * [Volumes](#volumes)
 * [Ports](#ports)
 * [Usage](#usage)
-  * [Docker Compose](#docker-compose)
   * [Command line](#command-line)
+  * [Quadlet](#quadlet-service)
 * [Notes](#notes)
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
   * [Populate .htpasswd files](#populate-htpasswd-files)
@@ -186,7 +186,10 @@ docker run --rm --name drrako-rtorrent \
   drrako/rtorrent:latest
 ```
 
-### Podman + quadlet service
+### Quadlet service
+Quadlets really shine when it comes to managing dockerized services on small home servers, I really 
+encourage you to give it a try instead of docker compose. 
+
 Adjust for your system and add the content below to `/etc/containers/systemd/rtorrent.container`
 ```ini
 [Unit]
@@ -380,15 +383,6 @@ Use where disk space is more important than speed. Or you intend to download sel
 The second type "2" allocates disk space for the entire torrent, whether it's downloaded or not.
 This method is faster than "1" becuase it reduces random reads for the entire torrent.
 Use where speed is more important than disk space. Or you intend to download 100% of every torrent.
-
-## Upgrade
-
-To upgrade, pull the newer image and launch the container:
-
-```shell
-docker compose pull
-docker compose up -d
-```
 
 ## License
 
