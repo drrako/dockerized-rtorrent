@@ -62,15 +62,7 @@ ___
 ```shell
 git clone https://github.com/drrako/dockerized-rtorrent.git
 cd dockerized-rtorrent
-
-# Build image and output to docker (default)
-docker buildx bake
-
-# Build image
-docker buildx bake image
-
-# Build multi-platform image
-docker buildx bake image-all
+docker build -t drrako/rtorrent .
 ```
 
 ## Image
@@ -82,11 +74,7 @@ docker buildx bake image-all
 Following platforms for this image are available:
 
 ```
-$ docker buildx imagetools inspect drrako/rtorrent --format "{{json .Manifest}}" | \
-  jq -r '.manifests[] | select(.platform.os != null and .platform.os != "unknown") | .platform | "\(.os)/\(.architecture)\(if .variant then "/" + .variant else "" end)"'
-
 linux/amd64
-linux/arm/v6
 linux/arm/v7
 linux/arm64
 ```
@@ -213,14 +201,6 @@ docker run -d --name rtorrent \
 
 ## Notes
 
-### XMLRPC through nginx
-
-rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you
-can only control it via XMLRPC. Nginx will route XMLRPC requests to rtorrent
-through port `8000`. These requests can be secured with basic authentication
-through the `/passwd/rpc.htpasswd` file in which you will need to add a username
-with his password. See below to populate this file with a user / password.
-
 ### Populate .htpasswd files
 
 For ruTorrent basic auth and XMLRPC through nginx 
@@ -268,11 +248,10 @@ plugin that already exists in ruTorrent, it will be removed from ruTorrent core
 plugins and yours will be used. And you can also add a theme in `/data/rutorrent/themes/`.
 The same principle as for plugins will be used if you want to override one.
 
-> :warning: Container has to be restarted to propagate changes
+> :warning: container has to be restarted to apply changes
 
 ### Edit a ruTorrent plugin configuration
 
-As you probably know, plugin configuration is not outsourced in ruTorrent.
 Loading the configuration of a plugin is done via a `conf.php` file placed at
 the root of the plugin folder. To solve this issue with Docker, a special folder
 has been created in `/data/rutorrent/plugins-conf` to allow you to configure
@@ -282,13 +261,13 @@ the `/data/rutorrent/plugins-conf/diskspace.php` file with your configuration:
 ```php
 <?php
 
-$diskUpdateInterval = 10;	// in seconds
-$notifySpaceLimit = 512;	// in Mb
+$diskUpdateInterval = 10;	  // in seconds
+$notifySpaceLimit = 512;	  // in Mb
 $partitionDirectory = null;	// if null, then we will check rtorrent download directory (or $topDirectory if rtorrent is unavailable)
-				// otherwise, set this to the absolute path for checked partition. 
+				                    // otherwise, set this to the absolute path for checked partition. 
 ```
 
-> :warning: Container has to be restarted to propagate changes
+> :warning: container has to be restarted to apply changes
 
 ### Increase Docker timeout to allow rTorrent to shutdown gracefully
 
