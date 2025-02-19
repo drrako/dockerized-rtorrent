@@ -6,6 +6,9 @@
     <img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version">
   </a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/">
+    <img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size">
+  </a>
+  <a href="https://hub.docker.com/r/drrako/rtorrent/">
     <img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls">
   </a>
 </p>
@@ -45,7 +48,7 @@ ___
 
 ## Features
 
-* Multi-platform image
+* Multi-platform compact image
 * Provides flexibility with download folder structure, compatible with Sonarr/Radarr
 * Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
@@ -213,7 +216,7 @@ TimeoutStopSec=180
 WantedBy=multi-user.target
 ```
 
-Not that PUID user should have r/w access to `/media/library` folder.
+PUID user should have r/w access to `/media/library` folder.
 
 ## Notes
 
