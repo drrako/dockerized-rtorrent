@@ -43,8 +43,6 @@ ___
   * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
   * [Configure rTorrent send receive buffers](#rtorrent-send-receive-buffers)
   * [Configure rTorrent disk space preallocation](#rtorrent-disk-space-preallocation)
-* [Upgrade](#upgrade)
-* [Contributing](#contributing)
 * [License](#license)
 
 ## Features
@@ -53,13 +51,15 @@ ___
 * Provides flexibility with download folder structure, compatible with Sonarr/Radarr
 * Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
+* Supervised by s6-overlay v3
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * Excludes `_cloudflare`/`mediainfo`/`screenshots` ruTorrent plugins in order to make image smaller
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
-* [mktorrent](https://github.com/pobrn/mktorrent) installed for ruTorrent create plugin
+* [mktorrent](https://github.com/pobrn/mktorrent) for ruTorrent create plugin
+* [dumptorrent](https://github.com/TheGoblinHero/dumptorrent) for automations that might need torrent metadata
 
 ## Managing download location
 
