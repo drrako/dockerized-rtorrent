@@ -164,28 +164,12 @@ linux/arm64
 
 ## Usage
 
-### Docker Compose
-
-Docker compose is the recommended way to run this image. Copy the content of
-folder [examples/compose](examples/compose) in `/var/rtorrent-rutorrent/` on
-your host for example. Edit the compose file with your preferences and run the
-following command:
-
-```shell
-mkdir data downloads passwd
-chown ${PUID}:${PGID} data downloads passwd
-docker compose up -d
-docker compose logs -f
-```
-
 ### Command line
 
 You can also use the following minimal command:
 
 ```shell
-mkdir data downloads passwd
-chown ${PUID}:${PGID} data downloads passwd
-docker run -d --name rtorrent \
+docker run --rm --name drrako-rtorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
   -p 6881:6881/udp \
@@ -194,10 +178,42 @@ docker run -d --name rtorrent \
   -p 9000:9000 \
   -p 50000:50000 \
   -v $(pwd)/data:/data \
-  -v $(pwd)/downloads:/downloads \
   -v $(pwd)/passwd:/passwd \
+  -v $(pwd)/media/library:/media/library \
   drrako/rtorrent:latest
 ```
+
+### Podman + quadlet service
+Adjust for your system and add the content below to `/etc/containers/systemd/rtorrent.container`
+```ini
+[Unit]
+Description=rTorrent
+
+[Container]
+Image=docker.io/drrako/rtorrent:latest
+StopTimeout=180
+AutoUpdate=registry
+Network=host
+Environment=PUID=1000
+Environment=PGID=1000
+Environment=TZ=Etc/UTC
+Environment=RT_DEFAULT_DIR=/media/library
+Environment=RT_DHT_PORT=11000
+Environment=XMLRPC_PORT=11500
+Environment=RT_INC_PORT=12000
+Volume=/home/PUID_USER/rtorrent:/data
+Volume=/home/PUID_USER/rtorrent/passwd:/passwd
+Volume=/media/library:/media/library
+
+[Service]
+Restart=always
+TimeoutStopSec=180
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Not that PUID user should have r/w access to `/media/library` folder.
 
 ## Notes
 
