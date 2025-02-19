@@ -1,11 +1,11 @@
-name: rtorrent-rutorrent
+name: drrako-rtorrent
 
 services:
   rtorrent-rutorrent:
-    image: ${RTORRENT_RUTORRENT_IMAGE:-crazymax/rtorrent-rutorrent}
-    container_name: ${RTORRENT_RUTORRENT_CONTAINER:-rtorrent-rutorrent}
+    image: ${RTORRENT_RUTORRENT_IMAGE:-drrako/rtorrent}
+    container_name: ${RTORRENT_RUTORRENT_CONTAINER:-drrako-rtorrent}
     networks:
-      - rtorrent-rutorrent
+      - drrako-rtorrent
     expose:
       - "${RT_DHT_PORT}/udp"
       - "${XMLRPC_PORT}"
@@ -19,14 +19,11 @@ services:
       - target: ${RUTORRENT_PORT}
         published: ${RUTORRENT_PORT}
         protocol: tcp
-      - target: ${WEBDAV_PORT}
-        published: ${WEBDAV_PORT}
-        protocol: tcp
       - target: ${RT_INC_PORT}
         published: ${RT_INC_PORT}
         protocol: tcp
     env_file:
-      - "rtorrent-rutorrent.env"
+      - "rtorrent.env"
       - ".env"
     volumes:
       - "rtorrent-rutorrent-data:/data"
@@ -39,22 +36,10 @@ services:
         hard: 40000
     restart: always
 
-  rtorrent-logs:
-    image: bash
-    container_name: rtorrent-rutorrent-logs
-    command: bash -c 'tail -f /data/rtorrent/log/*.log'
-    network_mode: none
-    depends_on:
-      - rtorrent-rutorrent
-    volumes:
-      - "rtorrent-rutorrent-data:/data"
-    restart: always
-
 volumes:
-  rtorrent-rutorrent-data:
-  rtorrent-rutorrent-downloads:
-  rtorrent-rutorrent-passwd:
+  drrako-rtorrent-data:
+  drrako-rtorrent-passwd:
 
 networks:
-  rtorrent-rutorrent:
-    name: rtorrent-rutorrent
+  drrako-rtorrent:
+    name: drrako-rtorrent

@@ -8,14 +8,6 @@ labels:
 body:
   - type: checkboxes
     attributes:
-      label: Support guidelines
-      description: Please read the support guidelines before proceeding.
-      options:
-        - label: I've read the [support guidelines](https://github.com/crazy-max/docker-rtorrent-rutorrent/blob/master/.github/SUPPORT.md)
-          required: true
-
-  - type: checkboxes
-    attributes:
       label: I've found a bug and checked that ...
       description: |
         Make sure that your request fulfills all of the following requirements. If one requirement cannot be satisfied, explain in detail why.
