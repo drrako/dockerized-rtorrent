@@ -19,6 +19,7 @@ Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [
 ___
 
 * [Features](#features)
+* [Managing download location](#download-folder)
 * [Build locally](#build-locally)
 * [Image](#image)
 * [Environment variables](#environment-variables)
@@ -60,6 +61,40 @@ ___
 * Allow persisting specific configuration for ruTorrent plugins
 * [mktorrent](https://github.com/pobrn/mktorrent) installed for ruTorrent create plugin
 
+## Managing download location
+
+This image does not explicitly require you to mount a `/download` folder. It's up to you to decide how do you want to
+manage download locations.
+If you're using *arr stack (sonarr/radarr), you should follow the same media library mount path everywhere 
+in order to make them all work together nicely. Let's consider example:
+
+```shell
+media/
+├─ downloads/
+├─ library/
+│  ├─ movies/
+│  ├─ tv/
+│  ├─ music/
+│  ├─ ...
+```
+
+You would need to mount the `/media` volume to rtorrent/sonarr/radarr images the same way:
+```shell
+rtorrent
+...
+  -v /home/user/rtorrent:/data
+  -v /home/user/rtorrent/passwd:/passwd
+  -v /media:/media
+```
+and sonarr container
+```shell
+sonarr
+...
+  -v /home/user/sonarr:/data
+  -v /media:/media
+```
+And finally, don't forget to set the default download dir `RT_DEFAULT_DIR` for rTorrent, in the example 
+above it would be `RT_DEFAULT_DIR=/media/downloads`.
 ## Build locally
 
 ```shell
@@ -203,7 +238,7 @@ Network=host
 Environment=PUID=1000
 Environment=PGID=1000
 Environment=TZ=Etc/UTC
-Environment=RT_DEFAULT_DIR=/media/library
+Environment=RT_DEFAULT_DIR=/media/library/downloads
 Environment=RT_DHT_PORT=11000
 Environment=XMLRPC_PORT=11500
 Environment=RT_INC_PORT=12000
