@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
-
-socklog-killer &

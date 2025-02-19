@@ -13,10 +13,9 @@ ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 ARG LIBTORRENT_VERSION=6f414ea97f0576ea9bd1fdefb9161a6e7991f1af
 ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
 
-ARG ALPINE_VERSION=3.21
-ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
+ARG ALPINE_VERSION=3.21.3
 
-FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
+FROM alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git tar tree sed xz
 WORKDIR /src
 
@@ -60,7 +59,8 @@ RUN git fetch origin "${DUMP_TORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN sed -i '1i #include <sys/time.h>' scrapec.c
 RUN rm -rf .git*
 
-FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
+FROM alpine:${ALPINE_VERSION} AS builder
+
 RUN apk --update --no-cache add \
     autoconf \
     automake \
@@ -145,7 +145,8 @@ RUN make dumptorrent -j$(nproc)
 RUN cp dumptorrent ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
-FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
+FROM alpine:${ALPINE_VERSION}
+
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 
@@ -167,6 +168,7 @@ RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repo
   && apk --update --no-cache add unrar@314 dhclient@320
   
 RUN apk --update --no-cache add \
+    s6-overlay \
     apache2-utils \
     bash \
     bind-tools \
