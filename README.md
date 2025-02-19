@@ -311,7 +311,7 @@ Higher values will reduce disk usage, at the cost of minor stat loss during a
 crash. Consider increasing to 10800 seconds (3 hours) if running thousands of
 torrents.
 
-### rTorrent tracker scrape patch
+### rTorrent tracker delay scrape
 
 `RT_TRACKER_DELAY_SCRAPE` specifies whether to delay tracker announces at
 rTorrent startup. The default value is `true`. There are two main benefits to
