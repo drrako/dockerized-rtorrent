@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 
+ARG XMLRPC_VERSION=1.64.00
 ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.34.4
 ARG CURL_VERSION=8.11.1
@@ -16,7 +17,7 @@ ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
 ARG ALPINE_VERSION=3.21.3
 
 FROM alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree sed xz
+RUN apk --update --no-cache add curl git subversion tar tree sed xz
 WORKDIR /src
 
 FROM src AS src-libsig
@@ -30,6 +31,10 @@ RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSI
 FROM src AS src-curl
 ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
+
+FROM src AS src-xmlrpc
+ARG XMLRPC_VERSION
+RUN svn checkout -q "http://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/" . && rm -rf .svn
 
 FROM src AS src-libtorrent
 RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
@@ -110,6 +115,17 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
+WORKDIR /usr/local/src/xmlrpc-c
+COPY --from=src-xmlrpc /src .
+RUN ./configure \
+   --disable-wininet-client \
+   --disable-libwww-client \
+   --disable-abyss-server \
+   --disable-cgi-server
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
+RUN make install -j$(nproc)
+RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
+
 WORKDIR /usr/local/src/rtorrent/libtorrent
 COPY --from=src-libtorrent /src .
 RUN autoreconf -fi
@@ -122,7 +138,7 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/rtorrent/rtorrent
 COPY --from=src-rtorrent /src .
 RUN autoreconf -fi
-RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
+RUN ./configure --with-xmlrpc-c --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)

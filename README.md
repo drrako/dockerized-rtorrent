@@ -130,7 +130,7 @@ linux/arm64
 * `LOG_ACCESS`: Output access log (default `true`)
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default `rTorrent XMLRPC restricted access`)
 * `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default `8000`)
-* `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `1M`)
+* `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `4M`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
 * `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
 
@@ -227,6 +227,8 @@ Image=docker.io/drrako/rtorrent:latest
 StopTimeout=180
 AutoUpdate=registry
 Network=host
+Ulimit=nofile=32000:40000
+Ulimit=nproc=65535
 Environment=PUID=1000
 Environment=PGID=1000
 Environment=TZ=Etc/UTC
