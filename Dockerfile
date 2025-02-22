@@ -118,11 +118,13 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/xmlrpc-c
 COPY --from=src-xmlrpc /src .
 RUN ./configure \
-   --disable-wininet-client \
-   --disable-libwww-client \
-   --disable-abyss-server \
-   --disable-cgi-server
-RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
+    --disable-cplusplus \
+    --disable-wininet-client \
+    --disable-libwww-client \
+    --disable-abyss-server \
+    --disable-cgi-server \
+    --enable-libcurl
+RUN make CXXFLAGS="-w -O3 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 
