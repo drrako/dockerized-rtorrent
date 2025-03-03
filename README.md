@@ -7,6 +7,8 @@
 
 ### Dockerized rTorrent
 
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/42e68bc5-4bb1-454f-b23f-24f0851939d3" />
+
 Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
 ___
 
