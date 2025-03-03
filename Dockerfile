@@ -10,9 +10,9 @@ ARG MKTORRENT_VERSION=v1.1
 ARG RUTORRENT_VERSION=8fd830f7b5a0c4a822df754531d7d1d1bf230aaa
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# rtorrent + libtorrent v0.15.1
-ARG LIBTORRENT_VERSION=6f414ea97f0576ea9bd1fdefb9161a6e7991f1af
-ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
+# rtorrent 0.9.8 + libtorrent v0.13.8
+ARG LIBTORRENT_VERSION=756f70010779927dc0691e1e722ed433d5d295e1
+ARG RTORRENT_VERSION=6154d1698756e0c4842b1c13a0e56db93f1aa947
 
 ARG ALPINE_VERSION=3.21.3
 
@@ -199,6 +199,7 @@ RUN apk --update --no-cache add \
     gzip \
     libstdc++ \
     ncurses \
+    cppunit \
     nginx \
     openssl \
     php83 \

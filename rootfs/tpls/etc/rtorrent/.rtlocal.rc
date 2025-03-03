@@ -11,7 +11,6 @@ method.insert = cfg.rundir, private|const|string, (cat,"/var/run/rtorrent/")
 method.insert = d.data_path, simple, "if=(d.is_multi_file), (cat,(d.directory),/), (cat,(d.directory),/,(d.name))"
 
 # Default directory to save the downloaded torrents
-# directory.default.set = (cat,("@RT_DEFAULT_DIR@"))
 directory.default.set = "@RT_DEFAULT_DIR@"
 
 # Default session directory
@@ -42,7 +41,7 @@ schedule2 = session_save, 1200, @RT_SESSION_SAVE_SECONDS@, ((session.save))
 method.set_key = event.download.inserted_new, "schedule2 = ((d.hash)), 0, 0, ((d.save_full_session))"
 
 # Configure whether to delay tracker announces at startup
-trackers.delay_scrape = @RT_TRACKER_DELAY_SCRAPE@
+# trackers.delay_scrape = @RT_TRACKER_DELAY_SCRAPE@
 
 # Configure TCP rmem and wmem for rTorrent client
 network.send_buffer.size.set = @RT_SEND_BUFFER_SIZE@
