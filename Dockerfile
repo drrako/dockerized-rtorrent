@@ -170,9 +170,7 @@ COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   S6_KILL_GRACETIME="10000" \
-  TZ="UTC" \
-  PUID="1000" \
-  PGID="1000"
+  TZ="UTC"
 
 # increase rmem_max and wmem_max for rTorrent configuration
 RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
@@ -224,9 +222,6 @@ RUN apk --update --no-cache add \
     unzip \
     util-linux \
     zip \
-  && addgroup -g ${PGID} rtorrent \
-  && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
-  && curl --version \
   && rm -rf /tmp/*
 
 COPY rootfs /
