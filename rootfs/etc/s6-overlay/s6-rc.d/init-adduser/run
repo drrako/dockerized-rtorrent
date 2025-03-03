@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+
+PUID=${PUID:-1000}
+PGID=${PGID:-1000}
+
+echo "Creating user rtorrent with PUID [$PUID] and PGID [$PGID].."
+addgroup -g $PGID rtorrent
+adduser -D -H -u $PUID -G rtorrent -s /bin/sh rtorrent

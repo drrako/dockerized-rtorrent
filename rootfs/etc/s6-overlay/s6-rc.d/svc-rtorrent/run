@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+export HOME=/data/rtorrent
+export PWD=/data/rtorrent
+if [ -z "${WAN_IP}" ]; then
+    exec s6-setuidgid rtorrent rtorrent -D -o import=/etc/rtorrent/.rtlocal.rc
+else
+    echo "Running rtorrent with enforced WAN IP ${WAN_IP}"
+    exec s6-setuidgid rtorrent rtorrent -D -o import=/etc/rtorrent/.rtlocal.rc -i ${WAN_IP}
+fi
