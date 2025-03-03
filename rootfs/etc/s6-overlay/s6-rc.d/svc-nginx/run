@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+exec s6-setuidgid rtorrent nginx -g "daemon off;"
