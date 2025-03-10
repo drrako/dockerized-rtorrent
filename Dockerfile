@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 
+ARG XMLRPC_VERSION=1.64.00
 ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.34.4
 ARG CURL_VERSION=8.11.1
@@ -9,14 +10,14 @@ ARG MKTORRENT_VERSION=v1.1
 ARG RUTORRENT_VERSION=8fd830f7b5a0c4a822df754531d7d1d1bf230aaa
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# rtorrent + libtorrent v0.15.1
-ARG LIBTORRENT_VERSION=6f414ea97f0576ea9bd1fdefb9161a6e7991f1af
-ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
+# rtorrent 0.9.8 + libtorrent v0.13.8
+ARG LIBTORRENT_VERSION=756f70010779927dc0691e1e722ed433d5d295e1
+ARG RTORRENT_VERSION=6154d1698756e0c4842b1c13a0e56db93f1aa947
 
 ARG ALPINE_VERSION=3.21.3
 
 FROM alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree sed xz
+RUN apk --update --no-cache add curl git subversion tar tree sed xz
 WORKDIR /src
 
 FROM src AS src-libsig
@@ -30,6 +31,10 @@ RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSI
 FROM src AS src-curl
 ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
+
+FROM src AS src-xmlrpc
+ARG XMLRPC_VERSION
+RUN svn checkout -q "http://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/" . && rm -rf .svn
 
 FROM src AS src-libtorrent
 RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
@@ -110,6 +115,19 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
+WORKDIR /usr/local/src/xmlrpc-c
+COPY --from=src-xmlrpc /src .
+RUN ./configure \
+    --disable-cplusplus \
+    --disable-wininet-client \
+    --disable-libwww-client \
+    --disable-abyss-server \
+    --disable-cgi-server \
+    --enable-libcurl
+RUN make CXXFLAGS="-w -O3 -flto"
+RUN make install -j$(nproc)
+RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
+
 WORKDIR /usr/local/src/rtorrent/libtorrent
 COPY --from=src-libtorrent /src .
 RUN autoreconf -fi
@@ -122,7 +140,7 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/rtorrent/rtorrent
 COPY --from=src-rtorrent /src .
 RUN autoreconf -fi
-RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
+RUN ./configure --with-xmlrpc-c --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
@@ -179,6 +197,7 @@ RUN apk --update --no-cache add \
     gzip \
     libstdc++ \
     ncurses \
+    cppunit \
     nginx \
     openssl \
     php83 \
