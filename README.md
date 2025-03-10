@@ -13,7 +13,7 @@ Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [
 ___
 
 * [Features](#features)
-* [Managing download location](#download-folder)
+* [Managing download location](#managing-download-location)
 * [Build locally](#build-locally)
 * [Image](#image)
 * [Environment variables](#environment-variables)
