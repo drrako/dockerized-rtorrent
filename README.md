@@ -132,7 +132,7 @@ linux/arm64
 * `LOG_ACCESS`: Output access log (default `true`)
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default `rTorrent XMLRPC restricted access`)
 * `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default `8000`)
-* `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `1M`)
+* `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `4M`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
 * `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
 
@@ -159,7 +159,7 @@ linux/arm64
 ### ruTorrent
 
 * `RU_REMOVE_CORE_PLUGINS`: Comma separated list of core plugins to remove, set to `false` to disable removal 
-* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default is set in ruTorrent)
+* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default value is provided by ruTorrent config)
 * `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default `30`)
 * `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default `true`)
 * `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default `5`)
