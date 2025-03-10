@@ -13,7 +13,7 @@ Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [
 ___
 
 * [Features](#features)
-* [Managing download location](#download-folder)
+* [Managing download location](#managing-download-location)
 * [Build locally](#build-locally)
 * [Image](#image)
 * [Environment variables](#environment-variables)
@@ -159,7 +159,7 @@ linux/arm64
 ### ruTorrent
 
 * `RU_REMOVE_CORE_PLUGINS`: Comma separated list of core plugins to remove, set to `false` to disable removal 
-* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default is set in ruTorrent)
+* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default value is provided by ruTorrent config)
 * `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default `30`)
 * `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default `true`)
 * `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default `5`)

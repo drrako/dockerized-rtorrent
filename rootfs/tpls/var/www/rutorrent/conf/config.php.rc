@@ -1,0 +1,74 @@
+<?php
+	// for snoopy client
+	$httpUserAgent = '@RU_HTTP_USER_AGENT@';
+	$httpTimeOut = @RU_HTTP_TIME_OUT@;
+	$httpUseGzip = @RU_HTTP_USE_GZIP@;
+
+	// for xmlrpc actions
+	$rpcTimeOut = @RU_RPC_TIME_OUT@;
+	$rpcLogCalls = @RU_LOG_RPC_CALLS@;
+	$rpcLogFaults = @RU_LOG_RPC_FAULTS@;
+
+	// for php
+	$phpUseGzip = @RU_PHP_USE_GZIP@;
+	$phpGzipLevel = @RU_PHP_GZIP_LEVEL@;
+
+	$schedule_rand = @RU_SCHEDULE_RAND@;
+
+	// Diagnose ruTorrent. Recommended to keep enabled, unless otherwise required.
+	$do_diagnostic = @RU_DO_DIAGNOSTIC@;
+	// Diagnose auto-loader. Set to "false" to make composer plugins work.
+	$al_diagnostic = true;
+
+	// path to log file (comment or leave blank to disable logging)
+	$log_file = '@RU_LOG_FILE@';
+
+	// Save uploaded torrents to profile/torrents directory or not
+	$saveUploadedTorrents = @RU_SAVE_UPLOADED_TORRENTS@;
+	// Overwrite existing uploaded torrents in profile/torrents directory or make unique name
+	$overwriteUploadedTorrents = @RU_OVERWRITE_UPLOADED_TORRENTS@;
+
+	// Upper available directory. Absolute path with trail slash.
+	$topDirectory = '/';
+	$forbidUserSettings = @RU_FORBID_USER_SETTINGS@;
+
+	$scgi_port = 0;
+	$scgi_host = "unix:///var/run/rtorrent/scgi.socket";
+	$XMLRPCMountPoint = "/RPC2";
+	// Can't be greater then 327625*1024 due to limitation in libtorrent ResourceManager::set_max_upload_unchoked function.
+	$throttleMaxSpeed = 327625*1024;
+
+	$pathToExternals = array(
+		"php"	=> '',
+		"curl"	=> '',
+		"gzip"	=> '',
+		"id"	=> '',
+		"stat"	=> '',
+	);
+
+	// Set to true if rTorrent is hosted on the SAME machine as ruTorrent
+	$localHostedMode = true;
+	// Set to true to enable rapid cached loading of ruTorrent plugins. Required to clear web browser cache when upgrading versions.
+	$cachedPluginLoading = @RU_CACHED_PLUGIN_LOADING@;
+	// Stable change to reduce loading times by minimizing JavaScript networked. Only recommended to disable when required for debuging purposes.
+	$pluginMinification = true; 	
+
+	$localhosts = array(			// list of local interfaces
+		"127.0.0.1",
+		"localhost",
+	);
+	// Path to user profiles
+	$profilePath = '/data/rutorrent/share';
+	// Mask for files and directory creation in user profiles.
+	$profileMask = 0777;
+	// Temp directory. Absolute path with trail slash. If null, then autodetect will be used.
+	$tempDirectory = null;
+	// If true then use X-Sendfile feature if it exist
+	$canUseXSendFile = false;
+
+	$locale = '@RU_LOCALE@';
+	// If true then Origin and Referer will be checked
+	$enableCSRFCheck = false;
+	// List of enabled domains for CSRF check (only hostnames, without protocols, port etc.).
+	// If empty, then will retrieve domain from HTTP_HOST / HTTP_X_FORWARDED_HOST
+	$enabledOrigins = array();
