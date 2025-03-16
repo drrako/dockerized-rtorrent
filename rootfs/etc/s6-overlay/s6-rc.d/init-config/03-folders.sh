@@ -1,5 +1,5 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/bin/sh
+
 echo "Preparing directories and permissions.."
 
 chown rtorrent:rtorrent /proc/self/fd/1 /proc/self/fd/2 || true
