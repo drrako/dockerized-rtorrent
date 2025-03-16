@@ -1,65 +1,5 @@
 #!/bin/sh
 
-TZ=${TZ:-UTC}
-
-# Timezone
-echo "Setting timezone to ${TZ}..."
-ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
-echo ${TZ} > /etc/timezone
-
-MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
-UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
-CLEAR_ENV=${CLEAR_ENV:-yes}
-OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
-MAX_FILE_UPLOADS=${MAX_FILE_UPLOADS:-50}
-AUTH_DELAY=${AUTH_DELAY:-0s}
-REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
-REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
-LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
-LOG_ACCESS=${LOG_ACCESS:-true}
-XMLRPC_SIZE_LIMIT=${XMLRPC_SIZE_LIMIT:-4M}
-
-XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
-RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
-
-NGINX_WORKER_PROCESSES=${NGINX_WORKER_PROCESSES:-2}
-NGINX_WORKER_CONNECTIONS=${NGINX_WORKER_CONNECTIONS:-1024}
-
-RT_DEFAULT_DIR=${RT_DEFAULT_DIR:-/downloads}
-RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
-RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
-RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
-RT_SESSION_SAVE_SECONDS=${RT_SESSION_SAVE_SECONDS:-3600}
-RT_TRACKER_DELAY_SCRAPE=${RT_TRACKER_DELAY_SCRAPE:-true}
-RT_SEND_BUFFER_SIZE=${RT_SEND_BUFFER_SIZE:-4M}
-RT_RECEIVE_BUFFER_SIZE=${RT_RECEIVE_BUFFER_SIZE:-4M}
-RT_PREALLOCATE_TYPE=${RT_PREALLOCATE_TYPE:-0}
-
-RU_REMOVE_CORE_PLUGINS=${RU_REMOVE_CORE_PLUGINS:-false}
-RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-$(php -r 'include "/var/www/rutorrent/conf/config.php"; echo $httpUserAgent;')}
-RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
-RU_HTTP_USE_GZIP=${RU_HTTP_USE_GZIP:-true}
-RU_RPC_TIME_OUT=${RU_RPC_TIME_OUT:-5}
-RU_LOG_RPC_CALLS=${RU_LOG_RPC_CALLS:-false}
-RU_LOG_RPC_FAULTS=${RU_LOG_RPC_FAULTS:-true}
-RU_PHP_USE_GZIP=${RU_PHP_USE_GZIP:-false}
-RU_PHP_GZIP_LEVEL=${RU_PHP_GZIP_LEVEL:-2}
-RU_SCHEDULE_RAND=${RU_SCHEDULE_RAND:-10}
-RU_LOG_FILE=${RU_LOG_FILE:-/data/rutorrent/rutorrent.log}
-RU_DO_DIAGNOSTIC=${RU_DO_DIAGNOSTIC:-true}
-RU_CACHED_PLUGIN_LOADING=${RU_CACHED_PLUGIN_LOADING:-false}
-RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
-RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
-RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
-RU_LOCALE=${RU_LOCALE:-UTF8}
-
-RT_DHT_PORT=${RT_DHT_PORT:-6881}
-RT_INC_PORT=${RT_INC_PORT:-50000}
-XMLRPC_PORT=${XMLRPC_PORT:-8000}
-XMLRPC_HEALTH_PORT=$((XMLRPC_PORT + 1))
-RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
-RUTORRENT_HEALTH_PORT=$((RUTORRENT_PORT + 1))
-
 # WAN IP
 if [ -z "$WAN_IP" ] && [ -n "$WAN_IP_CMD" ]; then
   WAN_IP=$(eval "$WAN_IP_CMD")
@@ -68,66 +8,6 @@ if [ -n "$WAN_IP" ]; then
   echo "Public IP address enforced to ${WAN_IP}"
 fi
 printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
-
-# PHP
-echo "Setting PHP-FPM configuration..."
-sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
-  -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
-  -e "s/@CLEAR_ENV@/$CLEAR_ENV/g" \
-  /tpls/etc/php83/php-fpm.d/www.conf > /etc/php83/php-fpm.d/www.conf
-
-echo "Setting PHP INI configuration..."
-sed -i "s|memory_limit.*|memory_limit = ${MEMORY_LIMIT}|g" /etc/php83/php.ini
-sed -i "s|;date\.timezone.*|date\.timezone = ${TZ}|g" /etc/php83/php.ini
-sed -i "s|max_file_uploads.*|max_file_uploads = ${MAX_FILE_UPLOADS}|g" /etc/php83/php.ini
-
-# OpCache
-echo "Setting OpCache configuration..."
-sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
-  /tpls/etc/php83/conf.d/opcache.ini > /etc/php83/conf.d/opcache.ini
-
-# Nginx
-echo "Setting Nginx configuration..."
-sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
-  -e "s#@REAL_IP_HEADER@#$REAL_IP_HEADER#g" \
-  -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
-  -e "s#@AUTH_DELAY@#$AUTH_DELAY#g" \
-  -e "s#@NGINX_WORKER_PROCESSES@#$NGINX_WORKER_PROCESSES#g" \
-  -e "s#@NGINX_WORKER_CONNECTIONS@#$NGINX_WORKER_CONNECTIONS#g" \
-  /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
-if [ "${LOG_ACCESS}" != "true" ]; then
-  echo "  Disabling Nginx access log..."
-  sed -i "s!access_log /proc/self/fd/1 main!access_log off!g" /etc/nginx/nginx.conf
-fi
-
-# Nginx XMLRPC over SCGI
-echo "Setting Nginx XMLRPC over SCGI configuration..."
-sed -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
-  -e "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" \
-  -e "s!@XMLRPC_HEALTH_PORT@!$XMLRPC_HEALTH_PORT!g" \
-  -e "s!@XMLRPC_SIZE_LIMIT@!$XMLRPC_SIZE_LIMIT!g" \
-  /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
-
-# Nginx ruTorrent
-echo "Setting Nginx ruTorrent configuration..."
-sed -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
-  -e "s!@RUTORRENT_AUTHBASIC_STRING@!$RUTORRENT_AUTHBASIC_STRING!g" \
-  -e "s!@RUTORRENT_PORT@!$RUTORRENT_PORT!g" \
-  -e "s!@RUTORRENT_HEALTH_PORT@!$RUTORRENT_HEALTH_PORT!g" \
-  /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
-
-# Healthcheck
-echo "Update healthcheck script..."
-cat > /usr/local/bin/healthcheck <<EOL
-#!/bin/sh
-set -e
-
-# rTorrent
-curl --fail -d "<?xml version='1.0'?><methodCall><methodName>system.api_version</methodName></methodCall>" http://127.0.0.1:${XMLRPC_HEALTH_PORT}
-
-# ruTorrent / PHP
-curl --fail http://127.0.0.1:${RUTORRENT_HEALTH_PORT}/ping
-EOL
 
 # Init
 echo "Initializing rTorrent and ruTorrent files and folders..."
@@ -206,7 +86,7 @@ sed -e "s!@RU_HTTP_USER_AGENT@!$RU_HTTP_USER_AGENT!g" \
   -e "s!@RU_OVERWRITE_UPLOADED_TORRENTS@!$RU_OVERWRITE_UPLOADED_TORRENTS!g" \
   -e "s!@RU_FORBID_USER_SETTINGS@!$RU_FORBID_USER_SETTINGS!g" \
   -e "s!@RU_CACHED_PLUGIN_LOADING@!$RU_CACHED_PLUGIN_LOADING!g" \
-  /tpls//var/www/rutorrent/conf/config.php.rc > /var/www/rutorrent/conf/config.php
+  /tpls/var/www/rutorrent/conf/config.php.rc > /var/www/rutorrent/conf/config.php
 chown nobody:nogroup "/var/www/rutorrent/conf/config.php"
 
 # Symlinking ruTorrent config
