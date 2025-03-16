@@ -86,6 +86,7 @@ sed -e "s!@RU_HTTP_USER_AGENT@!$RU_HTTP_USER_AGENT!g" \
   -e "s!@RU_OVERWRITE_UPLOADED_TORRENTS@!$RU_OVERWRITE_UPLOADED_TORRENTS!g" \
   -e "s!@RU_FORBID_USER_SETTINGS@!$RU_FORBID_USER_SETTINGS!g" \
   -e "s!@RU_CACHED_PLUGIN_LOADING@!$RU_CACHED_PLUGIN_LOADING!g" \
+  -e "s!@RU_LOCALE@!$RU_LOCALE!g" \
   /tpls/var/www/rutorrent/conf/config.php.rc > /var/www/rutorrent/conf/config.php
 chown nobody:nogroup "/var/www/rutorrent/conf/config.php"
 
