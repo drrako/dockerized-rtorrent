@@ -1,11 +1,11 @@
 name: drrako-rtorrent
 
 services:
-  rtorrent-rutorrent:
-    image: ${RTORRENT_RUTORRENT_IMAGE:-drrako/rtorrent}
-    container_name: ${RTORRENT_RUTORRENT_CONTAINER:-drrako-rtorrent}
+  dockerized-rtorrent:
+    image: ${DOCKERIZED_RTORRENT_IMAGE:-drrako/rtorrent}
+    container_name: ${DOCKERIZED_RTORRENT_CONTAINER:-drrako-rtorrent}
     networks:
-      - drrako-rtorrent
+      - dockerized-rtorrent
     expose:
       - "${RT_DHT_PORT}/udp"
       - "${XMLRPC_PORT}"
@@ -26,9 +26,9 @@ services:
       - "rtorrent.env"
       - ".env"
     volumes:
-      - "rtorrent-rutorrent-data:/data"
-      - "rtorrent-rutorrent-downloads:/downloads"
-      - "rtorrent-rutorrent-passwd:/passwd"
+      - "./data:/data"
+      - "./downloads:/media/downloads"
+      - "./passwd:/passwd"
     ulimits:
       nproc: 65535
       nofile:
@@ -36,10 +36,6 @@ services:
         hard: 40000
     restart: always
 
-volumes:
-  drrako-rtorrent-data:
-  drrako-rtorrent-passwd:
-
 networks:
-  drrako-rtorrent:
-    name: drrako-rtorrent
+  dockerized-rtorrent:
+    name: dockerized-rtorrent
