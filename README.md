@@ -24,6 +24,7 @@ ___
 * [Ports](#ports)
 * [Usage](#usage)
   * [Command line](#command-line)
+  * [Docker Compose](#docker-compose)
   * [Quadlet](#quadlet-service)
 * [Notes](#notes)
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
@@ -213,6 +214,14 @@ docker run --rm --name drrako-rtorrent \
   -v $(pwd)/passwd:/passwd \
   -v $(pwd)/media/library:/media/library \
   drrako/rtorrent:latest
+```
+
+### Docker Compose
+
+Docker compose exampl can be found [here](examples/compose.yml).
+
+```bash
+docker compose up -d
 ```
 
 ### Quadlet service
