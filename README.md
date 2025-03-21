@@ -218,7 +218,7 @@ docker run --rm --name drrako-rtorrent \
 
 ### Docker Compose
 
-Docker compose exampl can be found [here](examples/compose.yml).
+Docker compose example can be found [here](examples/compose.yml).
 
 ```bash
 docker compose up -d
@@ -228,7 +228,7 @@ docker compose up -d
 Quadlets really shine when it comes to managing dockerized services on small home servers, I really 
 encourage you to give it a try instead of docker compose. 
 
-Adjust for your system and add the content below to `/etc/containers/systemd/rtorrent.container`
+Adjust for your system and add [the content below](examples/rtorrent.container) to `/etc/containers/systemd/rtorrent.container`
 ```ini
 [Unit]
 Description=rTorrent
