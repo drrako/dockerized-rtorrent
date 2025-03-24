@@ -1,0 +1,5 @@
+docker-run.sh
+temp/
+examples/data
+examples/downloads
+examples/passwd

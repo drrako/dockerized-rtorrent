@@ -1,6 +1,6 @@
 <p align='left'>                                   
   <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.9.8" alt="Latest Version"></a>
-  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?label=version&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.1.6&style=flat-square" alt="Latest Version"></a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 </p>
@@ -24,6 +24,7 @@ ___
 * [Ports](#ports)
 * [Usage](#usage)
   * [Command line](#command-line)
+  * [Docker Compose](#docker-compose)
   * [Quadlet](#quadlet-service)
 * [Notes](#notes)
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
@@ -45,11 +46,11 @@ ___
 * Provides flexibility with download folder structure, compatible with Sonarr/Radarr
 * Latest stable vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
-* Supervised by s6-overlay v3
+* Supervised by s6 v3
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
-* Excludes `_cloudflare`/`mediainfo`/`screenshots` ruTorrent plugins in order to make image smaller
+* Excludes `_cloudflare`/`mediainfo`/`screenshots` ruTorrent plugins in order to make the image smaller
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
 * [mktorrent](https://github.com/pobrn/mktorrent) for ruTorrent create plugin
@@ -215,11 +216,19 @@ docker run --rm --name drrako-rtorrent \
   drrako/rtorrent:latest
 ```
 
+### Docker Compose
+
+Docker compose example can be found [here](examples/compose.yml).
+
+```bash
+docker compose up -d
+```
+
 ### Quadlet service
 Quadlets really shine when it comes to managing dockerized services on small home servers, I really 
 encourage you to give it a try instead of docker compose. 
 
-Adjust for your system and add the content below to `/etc/containers/systemd/rtorrent.container`
+Adjust for your system and add [the content below](examples/rtorrent.container) to `/etc/containers/systemd/rtorrent.container`
 ```ini
 [Unit]
 Description=rTorrent
@@ -235,9 +244,9 @@ Environment=PUID=1000
 Environment=PGID=1000
 Environment=TZ=Etc/UTC
 Environment=RT_DEFAULT_DIR=/media/library/downloads
-Environment=RT_DHT_PORT=11000
-Environment=XMLRPC_PORT=11500
-Environment=RT_INC_PORT=12000
+Environment=RT_DHT_PORT=6881
+Environment=XMLRPC_PORT=8000
+Environment=RT_INC_PORT=50000
 Volume=/home/PUID_USER/rtorrent:/data
 Volume=/home/PUID_USER/rtorrent/passwd:/passwd
 Volume=/media/library:/media/library
