@@ -5,8 +5,8 @@ ARG CARES_VERSION=1.34.4
 ARG CURL_VERSION=8.11.1
 ARG MKTORRENT_VERSION=v1.1
 
-# ruTorrent v5.1.5; https://github.com/drrako/ruTorrent/; drrako-main branch
-ARG RUTORRENT_VERSION=8fd830f7b5a0c4a822df754531d7d1d1bf230aaa
+# ruTorrent v5.1.6; https://github.com/drrako/ruTorrent/; drrako-main branch
+ARG RUTORRENT_VERSION=5657553cae1262d622557a15e05f18135b9049ed
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
 # rtorrent + libtorrent v0.15.1
