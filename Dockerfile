@@ -9,8 +9,7 @@ ARG MKTORRENT_VERSION=v1.1
 ARG LIBTORRENT_VERSION=6f414ea97f0576ea9bd1fdefb9161a6e7991f1af
 ARG RTORRENT_VERSION=31602917b7fdc59a77e611768326d540db1c9091
 
-# ruTorrent v5.1.7; https://github.com/drrako/ruTorrent/; drrako-main branch
-ARG RUTORRENT_VERSION=952fbea13f16ecae740775a885130df0190e9a98
+ARG RUTORRENT_VERSION=v5.2.2
 
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
@@ -48,7 +47,7 @@ ARG MKTORRENT_VERSION
 RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rutorrent
-RUN git init . && git remote add origin "https://github.com/drrako/ruTorrent.git"
+RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
 RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
