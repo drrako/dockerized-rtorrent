@@ -1,6 +1,6 @@
 <p align='left'>                                   
   <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.9.8&label=rtorrent&style=flat-square" alt="Latest Version"></a>
-  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.1.6&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.2.2&style=flat-square" alt="Latest Version"></a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 </p>
@@ -27,7 +27,6 @@ ___
   * [Docker Compose](#docker-compose)
   * [Quadlet](#quadlet-service)
 * [Notes](#notes)
-  * [XMLRPC through nginx](#xmlrpc-through-nginx)
   * [Populate .htpasswd files](#populate-htpasswd-files)
   * [Bootstrap config `.rtlocal.rc`](#bootstrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
@@ -35,7 +34,6 @@ ___
   * [Increase Docker timeout to allow rTorrent to shutdown gracefully](#increase-docker-timeout-to-allow-rtorrent-to-shutdown-gracefully)
   * [WAN IP address](#wan-ip-address)
   * [Configure rTorrent session saving](#configure-rtorrent-session-saving)
-  * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
   * [Configure rTorrent send receive buffers](#rtorrent-send-receive-buffers)
   * [Configure rTorrent disk space preallocation](#rtorrent-disk-space-preallocation)
 * [License](#license)
