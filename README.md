@@ -1,6 +1,6 @@
 <p align='left'>                                   
-  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.15.3&label=rtorrent&style=flat-square" alt="Latest Version"></a>
-  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.2.2&label=rutorrent&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.9.8&label=rtorrent&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.2.2&style=flat-square" alt="Latest Version"></a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
   <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 </p>
@@ -42,7 +42,7 @@ ___
 
 * Multi-platform compact image
 * Provides flexibility with download folder structure, compatible with Sonarr/Radarr
-* Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
+* Latest stable vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Supervised by s6 v3
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
@@ -236,6 +236,8 @@ Image=docker.io/drrako/rtorrent:latest
 StopTimeout=180
 AutoUpdate=registry
 Network=host
+Ulimit=nofile=32000:40000
+Ulimit=nproc=65535
 Environment=PUID=1000
 Environment=PGID=1000
 Environment=TZ=Etc/UTC
