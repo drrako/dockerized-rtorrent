@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 
 ARG LIBSIG_VERSION=3.0.3
-ARG CARES_VERSION=1.34.4
-ARG CURL_VERSION=8.11.1
+ARG CARES_VERSION=1.34.5
+ARG CURL_VERSION=8.12.1
 ARG MKTORRENT_VERSION=v1.1
 
 ARG LIBTORRENT_VERSION=v0.15.3
@@ -69,6 +69,7 @@ RUN apk --update --no-cache add \
     cppunit-dev \
     cmake \
     gd-dev \
+    libpsl-dev \
     libtool \
     libxslt-dev \
     linux-headers \
@@ -111,7 +112,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent/libtorrent
 COPY --from=src-libtorrent /src .
-RUN autoreconf -fi
+RUN autoreconf -vfi
 RUN ./configure --enable-aligned --disable-instrumentation
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
@@ -120,7 +121,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent/rtorrent
 COPY --from=src-rtorrent /src .
-RUN autoreconf -fi
+RUN autoreconf -vfi
 RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
