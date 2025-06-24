@@ -52,7 +52,7 @@ ___
 * Ability to add a custom ruTorrent plugin / theme
 * Allow persisting specific configuration for ruTorrent plugins
 * [mktorrent](https://github.com/pobrn/mktorrent) for ruTorrent create plugin
-* [dumptorrent](https://github.com/TheGoblinHero/dumptorrent) for automations that might need torrent metadata
+* [dumptorrent](https://github.com/tomcdj71/dumptorrent) for automations that might need torrent metadata
 
 ## Managing download location
 
