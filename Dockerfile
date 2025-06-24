@@ -144,8 +144,8 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/dump-torrent
 COPY --from=src-dump-torrent /src .
-RUN cmake -B build/ -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release -S .
-RUN cmake --build build/ --config Release --parallel $(nproc)
+RUN cmake -B build/ -D CMAKE_CXX_COMPILER=g++ -D CMAKE_C_COMPILER=gcc -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="-O3 -flto" -D CMAKE_C_FLAGS="-O3 -flto" -S .
+RUN cmake --build build/ --config Release --clean-first --parallel $(nproc)
 RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
