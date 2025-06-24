@@ -2,17 +2,17 @@
 
 ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.34.5
-ARG CURL_VERSION=8.12.1
+ARG CURL_VERSION=8.14.1
 ARG MKTORRENT_VERSION=v1.1
 
-ARG LIBTORRENT_VERSION=v0.15.4
-ARG RTORRENT_VERSION=v0.15.4
+ARG LIBTORRENT_VERSION=v0.15.5
+ARG RTORRENT_VERSION=v0.15.5
 
-ARG RUTORRENT_VERSION=v5.2.8
+ARG RUTORRENT_VERSION=v5.2.10
 
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-ARG ALPINE_VERSION=3.21.3
+ARG ALPINE_VERSION=3.22
 
 FROM alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git tar tree sed xz
@@ -77,12 +77,15 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php83-dev \
-    php83-pear \
+    php84-dev \
+    php84-pear \
     tar \
     tree \
     xz \
     zlib-dev
+
+
+RUN ln -s /usr/bin/php84 /usr/bin/php && ln -s /usr/bin/php-config84 /usr/bin/php-config
 
 ENV DIST_PATH="/dist"
 
@@ -181,21 +184,21 @@ RUN apk --update --no-cache add \
     ncurses \
     nginx \
     openssl \
-    php83 \
-    php83-bcmath \
-    php83-ctype \
-    php83-curl \
-    php83-dom \
-    php83-fileinfo \
-    php83-fpm \
-    php83-mbstring \
-    php83-openssl \
-    php83-phar \
-    php83-posix \
-    php83-session \
-    php83-sockets \
-    php83-xml \
-    php83-zip \
+    php84 \
+    php84-bcmath \
+    php84-ctype \
+    php84-curl \
+    php84-dom \
+    php84-fileinfo \
+    php84-fpm \
+    php84-mbstring \
+    php84-openssl \
+    php84-phar \
+    php84-posix \
+    php84-session \
+    php84-sockets \
+    php84-xml \
+    php84-zip \
     shadow \
     sox \
     tar \
@@ -203,6 +206,7 @@ RUN apk --update --no-cache add \
     unzip \
     util-linux \
     zip \
+  && ln -s /usr/bin/php84 /usr/bin/php \
   && rm -rf /tmp/*
 
 COPY rootfs /
