@@ -10,7 +10,7 @@ ARG RTORRENT_VERSION=v0.15.5
 
 ARG RUTORRENT_VERSION=v5.2.10
 
-ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
+ARG DUMP_TORRENT_VERSION=v1.7.0
 
 ARG ALPINE_VERSION=3.22
 
@@ -52,10 +52,10 @@ RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
 
 FROM src AS src-dump-torrent
-RUN git init . && git remote add origin "https://github.com/TheGoblinHero/dumptorrent.git"
+RUN git init . && git remote add origin "https://github.com/tomcdj71/dumptorrent.git"
 ARG DUMP_TORRENT_VERSION
 RUN git fetch origin "${DUMP_TORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN sed -i '1i #include <sys/time.h>' scrapec.c
+RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
 
 FROM alpine:${ALPINE_VERSION} AS builder
@@ -144,8 +144,9 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/dump-torrent
 COPY --from=src-dump-torrent /src .
-RUN make dumptorrent -j$(nproc)
-RUN cp dumptorrent ${DIST_PATH}/usr/local/bin
+RUN cmake -B build/ -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release -S .
+RUN cmake --build build/ --config Release --parallel $(nproc)
+RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
 FROM alpine:${ALPINE_VERSION}
