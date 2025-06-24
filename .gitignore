@@ -1,4 +1,5 @@
 docker-run.sh
+docker-release.sh
 temp/
 examples/data
 examples/downloads
