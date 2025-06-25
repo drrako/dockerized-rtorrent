@@ -1,18 +1,33 @@
-<p align='left'>                                   
-  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.15.5&label=rtorrent&style=flat-square" alt="Latest Version"></a>
-  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.2.10&label=rutorrent&style=flat-square" alt="Latest Version"></a>
-  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
-  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
-</p>
+<div align="center">
+	<h2>Dockerized rTorrent</h2>
+	<p>                                   
+	  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.15.5&label=rtorrent&style=flat-square" alt="Latest Version"></a>
+	  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.2.10&label=rutorrent&style=flat-square" alt="Latest Version"></a>
+	  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
+	  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
+	</p>
+	<img width="840" alt="Demo" src="https://github.com/user-attachments/assets/f9283cea-fd6f-4e93-92d0-07c59a2d5251" />
+</div>
 
-### Dockerized rTorrent
-
-<img width="480" alt="image" src="https://github.com/user-attachments/assets/42e68bc5-4bb1-454f-b23f-24f0851939d3" />
-
+## About
 Docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
+
+## Features
+* Multi-platform compact image
+* Provides flexibility with download folder structure, compatible with Sonarr/Radarr
+* Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
+* Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
+* Supervised by s6 v3
+* Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
+* Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
+* XMLRPC through nginx over SCGI socket (basic auth optional)
+* Excludes `_cloudflare`/`mediainfo`/`screenshots` ruTorrent plugins in order to make the image smaller
+* Ability to add a custom ruTorrent plugin / theme
+* Allow persisting specific configuration for ruTorrent plugins
+* [mktorrent](https://github.com/pobrn/mktorrent) for ruTorrent create plugin
+* [dumptorrent](https://github.com/tomcdj71/dumptorrent) for automations that might need torrent metadata
 ___
 
-* [Features](#features)
 * [Managing download location](#managing-download-location)
 * [Build locally](#build-locally)
 * [Image](#image)
@@ -37,22 +52,6 @@ ___
   * [Configure rTorrent send receive buffers](#rtorrent-send-receive-buffers)
   * [Configure rTorrent disk space preallocation](#rtorrent-disk-space-preallocation)
 * [License](#license)
-
-## Features
-
-* Multi-platform compact image
-* Provides flexibility with download folder structure, compatible with Sonarr/Radarr
-* Latest vanilla [rTorrent and libTorrent](https://github.com/rakshasa/rtorrent)
-* Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
-* Supervised by s6 v3
-* Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests
-* Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
-* XMLRPC through nginx over SCGI socket (basic auth optional)
-* Excludes `_cloudflare`/`mediainfo`/`screenshots` ruTorrent plugins in order to make the image smaller
-* Ability to add a custom ruTorrent plugin / theme
-* Allow persisting specific configuration for ruTorrent plugins
-* [mktorrent](https://github.com/pobrn/mktorrent) for ruTorrent create plugin
-* [dumptorrent](https://github.com/tomcdj71/dumptorrent) for automations that might need torrent metadata
 
 ## Managing download location
 
