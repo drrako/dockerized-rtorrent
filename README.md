@@ -114,65 +114,73 @@ linux/arm64
 
 ### General
 
-* `TZ`: The timezone assigned to the container (default `UTC`)
-* `PUID`: rTorrent user id (default `1000`)
-* `PGID`: rTorrent group id (default `1000`)
-* `WAN_IP`: [Public IP address](#wan-ip-address) reported to the tracker (auto if empty)
-* `WAN_IP_CMD`: Command to resolve the [Public IP address](#wan-ip-address)
-* `MEMORY_LIMIT`: PHP memory limit (default `256M`)
-* `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
-* `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
-* `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
-* `MAX_FILE_UPLOADS`: The maximum number of files allowed to be uploaded simultaneously (default `50`)
-* `AUTH_DELAY`: The time in seconds to wait for Basic Auth (default `0s`)
-* `REAL_IP_FROM`: Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
-* `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
-* `LOG_ACCESS`: Output access log (default `true`)
-* `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default `rTorrent XMLRPC restricted access`)
-* `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default `8000`)
-* `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `4M`)
-* `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
-* `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
+| Variable Name                  | Description                                                                                                 | Default Value                                      |
+|------------------------------- |------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| TZ                             | The timezone assigned to the container                                                                     | UTC                                                |
+| PUID                           | rTorrent user id                                                                                           | 1000                                               |
+| PGID                           | rTorrent group id                                                                                          | 1000                                               |
+| WAN_IP                         | Public IP address reported to the tracker                                                                  | (auto if empty)                                    |
+| WAN_IP_CMD                     | Command to resolve the Public IP address                                                                   |                                                    |
+| MEMORY_LIMIT                   | PHP memory limit                                                                                           | 256M                                               |
+| UPLOAD_MAX_SIZE                | Upload max size                                                                                            | 16M                                                |
+| CLEAR_ENV                      | Clear environment in FPM workers                                                                           | yes                                                |
+| OPCACHE_MEM_SIZE               | PHP OpCache memory consumption                                                                             | 128                                                |
+| MAX_FILE_UPLOADS               | The maximum number of files allowed to be uploaded simultaneously                                          | 50                                                 |
+| AUTH_DELAY                     | The time in seconds to wait for Basic Auth                                                                 | 0s                                                 |
+| REAL_IP_FROM                   | Trusted addresses that are known to send correct replacement addresses                                     | 0.0.0.0/32                                         |
+| REAL_IP_HEADER                 | Request header field whose value will be used to replace the client address                                | X-Forwarded-For                                    |
+| LOG_ACCESS                     | Output access log                                                                                          | true                                               |
+| XMLRPC_AUTHBASIC_STRING        | Message displayed during validation of XMLRPC Basic Auth                                                   | rTorrent XMLRPC restricted access                  |
+| XMLRPC_PORT                    | XMLRPC port through nginx over SCGI socket                                                                 | 8000                                               |
+| XMLRPC_SIZE_LIMIT              | Maximum body size of XMLRPC calls                                                                          | 4M                                                 |
+| RUTORRENT_AUTHBASIC_STRING     | Message displayed during validation of ruTorrent Basic Auth                                                | ruTorrent restricted access                        |
+| RUTORRENT_PORT                 | ruTorrent HTTP port                                                                                        | 8080                                               |
 
 ### Nginx
 
-* `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
-* `NGINX_WORKER_PROCESSES`: Number of nginx worker processes (default `2`, set `auto` to utilize all cores)
-* `NGINX_WORKER_CONNECTIONS`: Number of nginx worker connections (default `1024`)
+| Variable Name                  | Description                                                                                                 | Default Value                                      |
+|------------------------------- |------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| LOG_IP_VAR                     | Use another variable to retrieve the remote IP address for access log_format on Nginx                      | remote_addr                                        |
+| NGINX_WORKER_PROCESSES         | Number of nginx worker processes                                                                           | 2 (set auto to utilize all cores)                  |
+| NGINX_WORKER_CONNECTIONS       | Number of nginx worker connections                                                                         | 1024                                               |
 
 ### rTorrent
 
-* `RT_DEFAULT_DIR`: Sets the default download directory (default `/downloads`)
-* `RT_LOG_LEVEL`: rTorrent log level (default `info`)
-* `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
-* `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
-* `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
-* `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
-* `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
-* `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
-* `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value (`network.send_buffer.size.set`, default `4M`)
-* `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value (`network.receive_buffer.size.set`, default `4M`)
-* `RT_PREALLOCATE_TYPE`: Sets the type of [disk space preallocation](#rtorrent-disk-space-preallocation) (default `0`)
+| Variable Name                  | Description                                                                                                 | Default Value                                      |
+|------------------------------- |------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| RT_DEFAULT_DIR                 | Sets the default download directory                                                                        | /downloads                                         |
+| RT_LOG_LEVEL                   | rTorrent log level                                                                                         | info                                               |
+| RT_LOG_EXECUTE                 | Log executed commands to /data/rtorrent/log/execute.log                                                    | false                                              |
+| RT_LOG_XMLRPC                  | Log XMLRPC queries to /data/rtorrent/log/xmlrpc.log                                                        | false                                              |
+| RT_SESSION_SAVE_SECONDS        | Seconds between writing torrent information to disk                                                        | 3600                                               |
+| RT_TRACKER_DELAY_SCRAPE        | Delay tracker announces at startup                                                                         | true                                               |
+| RT_DHT_PORT                    | DHT UDP port (dht.port.set)                                                                                | 6881                                               |
+| RT_INC_PORT                    | Incoming connections (network.port_range.set)                                                              | 50000                                              |
+| RT_SEND_BUFFER_SIZE            | Sets default tcp wmem value (network.send_buffer.size.set)                                                 | 4M                                                 |
+| RT_RECEIVE_BUFFER_SIZE         | Sets default tcp rmem value (network.receive_buffer.size.set)                                              | 4M                                                 |
+| RT_PREALLOCATE_TYPE            | Sets the type of disk space preallocation                                                                  | 0                                                  |
 
 ### ruTorrent
 
-* `RU_REMOVE_CORE_PLUGINS`: Comma separated list of core plugins to remove, set to `false` to disable removal 
-* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default value is provided by ruTorrent config)
-* `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default `30`)
-* `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default `true`)
-* `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default `5`)
-* `RU_LOG_RPC_CALLS`: Log ruTorrent RPC calls (default `false`)
-* `RU_LOG_RPC_FAULTS`: Log ruTorrent RPC faults (default `true`)
-* `RU_PHP_USE_GZIP`: Use PHP Gzip compression (default `false`)
-* `RU_PHP_GZIP_LEVEL`: PHP Gzip compression level (default `2`)
-* `RU_SCHEDULE_RAND`: Rand for schedulers start, +0..X seconds (default `10`)
-* `RU_LOG_FILE`: ruTorrent log file path for errors messages (default `/data/rutorrent/rutorrent.log`)
-* `RU_DO_DIAGNOSTIC`: ruTorrent diagnostics like permission checking (default `true`)
-* `RU_CACHED_PLUGIN_LOADING`: Set to `true` to enable rapid cached loading of ruTorrent plugins (default `false`)
-* `RU_SAVE_UPLOADED_TORRENTS`: Save torrents files added wia ruTorrent in `/data/rutorrent/share/torrents` (default `true`)
-* `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
-* `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
-* `RU_LOCALE`: Set default locale for ruTorrent (default `UTF8`)
+| Variable Name                  | Description                                                                                                 | Default Value                                      |
+|------------------------------- |------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| RU_REMOVE_CORE_PLUGINS         | Comma separated list of core plugins to remove, set to false to disable removal                            |                                                    |
+| RU_HTTP_USER_AGENT             | ruTorrent HTTP user agent                                                                                  | (provided by ruTorrent config)                     |
+| RU_HTTP_TIME_OUT               | ruTorrent HTTP timeout in seconds                                                                          | 30                                                 |
+| RU_HTTP_USE_GZIP               | Use HTTP Gzip compression                                                                                  | true                                               |
+| RU_RPC_TIME_OUT                | ruTorrent RPC timeout in seconds                                                                           | 5                                                  |
+| RU_LOG_RPC_CALLS               | Log ruTorrent RPC calls                                                                                    | false                                              |
+| RU_LOG_RPC_FAULTS              | Log ruTorrent RPC faults                                                                                   | true                                               |
+| RU_PHP_USE_GZIP                | Use PHP Gzip compression                                                                                   | false                                              |
+| RU_PHP_GZIP_LEVEL              | PHP Gzip compression level                                                                                 | 2                                                  |
+| RU_SCHEDULE_RAND               | Rand for schedulers start, +0..X seconds                                                                   | 10                                                 |
+| RU_LOG_FILE                    | ruTorrent log file path for errors messages                                                                | /data/rutorrent/rutorrent.log                      |
+| RU_DO_DIAGNOSTIC               | ruTorrent diagnostics like permission checking                                                             | true                                               |
+| RU_CACHED_PLUGIN_LOADING       | Set to true to enable rapid cached loading of ruTorrent plugins                                            | false                                              |
+| RU_SAVE_UPLOADED_TORRENTS      | Save torrents files added via ruTorrent in /data/rutorrent/share/torrents                                 | true                                               |
+| RU_OVERWRITE_UPLOADED_TORRENTS | Existing .torrent files will be overwritten                                                                | false                                              |
+| RU_FORBID_USER_SETTINGS        | If true, allows for single user style configuration, even with webauth                                     | false                                              |
+| RU_LOCALE                      | Set default locale for ruTorrent                                                                           | UTF8                                               |
 
 ## Volumes
 
