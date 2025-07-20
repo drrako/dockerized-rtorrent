@@ -31,30 +31,25 @@ ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-libtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
 ARG LIBTORRENT_VERSION
-RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git clone --depth 1 --branch "${LIBTORRENT_VERSION}" "https://github.com/rakshasa/libtorrent.git" .
 
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
 ARG RTORRENT_VERSION
-RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git clone --depth 1 --branch "${RTORRENT_VERSION}" "https://github.com/rakshasa/rtorrent.git" .
 
 FROM src AS src-mktorrent
-RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
 ARG MKTORRENT_VERSION
-RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git clone --depth 1 --branch "${MKTORRENT_VERSION}" "https://github.com/pobrn/mktorrent.git" .
 
 FROM src AS src-rutorrent
-RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
-RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git clone --depth 1 --branch "${RUTORRENT_VERSION}" "https://github.com/Novik/ruTorrent.git" .
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
 
 FROM src AS src-dump-torrent
-RUN git init . && git remote add origin "https://github.com/tomcdj71/dumptorrent.git"
 ARG DUMP_TORRENT_VERSION
-RUN git fetch origin "${DUMP_TORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git clone --depth 1 --branch "${DUMP_TORRENT_VERSION}" "https://github.com/tomcdj71/dumptorrent.git" .
 RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
 
