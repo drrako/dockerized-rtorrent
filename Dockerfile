@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG LIBSIG_VERSION=3.0.3
-ARG CARES_VERSION=1.34.5
+ARG CARES_VERSION=v1.34.5
 ARG CURL_VERSION=8.14.1
 ARG MKTORRENT_VERSION=v1.1
 
@@ -18,13 +17,9 @@ FROM alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git tar tree sed xz
 WORKDIR /src
 
-FROM src AS src-libsig
-ARG LIBSIG_VERSION
-RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2B-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
-
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSION}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+RUN git clone --depth 1 --branch "${CARES_VERSION}" "https://github.com/c-ares/c-ares.git" .
 
 FROM src AS src-curl
 ARG CURL_VERSION
@@ -83,14 +78,6 @@ RUN apk --update --no-cache add \
 RUN ln -s /usr/bin/php84 /usr/bin/php && ln -s /usr/bin/php-config84 /usr/bin/php-config
 
 ENV DIST_PATH="/dist"
-
-WORKDIR /usr/local/src/libsig
-COPY --from=src-libsig /src .
-RUN ./configure
-RUN make -j$(nproc)
-RUN make install -j$(nproc)
-RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/cares
 COPY --from=src-cares /src .
