@@ -3,6 +3,7 @@
 ARG CARES_VERSION=v1.34.5
 ARG CURL_VERSION=8.14.1
 ARG MKTORRENT_VERSION=v1.1
+ARG UNRAR_VERSION=7.1.2
 
 ARG LIBTORRENT_VERSION=v0.15.7
 ARG RTORRENT_VERSION=v0.15.7
@@ -47,6 +48,10 @@ ARG DUMP_TORRENT_VERSION
 RUN git clone --depth 1 --branch "${DUMP_TORRENT_VERSION}" "https://github.com/tomcdj71/dumptorrent.git" .
 RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
+
+FROM src AS src-unrar
+ARG UNRAR_VERSION
+RUN wget -q "https://www.rarlab.com/rar/unrarsrc-${UNRAR_VERSION}.tar.gz" -O- | tar xz --strip 1
 
 FROM alpine:${ALPINE_VERSION} AS builder
 
@@ -131,6 +136,12 @@ RUN cmake --build build/ --config Release --clean-first --parallel $(nproc)
 RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
+WORKDIR /usr/local/src/unrar
+COPY --from=src-unrar /src .
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
+RUN cp unrar ${DIST_PATH}/usr/local/bin
+RUN tree ${DIST_PATH}
+
 FROM alpine:${ALPINE_VERSION}
 
 COPY --from=builder /dist /
@@ -145,11 +156,9 @@ RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
   && echo "net.core.wmem_max = 67108864" >> /etc/sysctl.conf \
   && sysctl -p
 
-# unrar package is not available since alpine 3.15
 # dhclient package is not available since alpine 3.21
-RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
-  && echo "@320 http://dl-cdn.alpinelinux.org/alpine/v3.20/main" >> /etc/apk/repositories \
-  && apk --update --no-cache add unrar@314 dhclient@320
+RUN echo "@320 http://dl-cdn.alpinelinux.org/alpine/v3.20/main" >> /etc/apk/repositories \
+  && apk --update --no-cache add dhclient@320
   
 RUN apk --update --no-cache add \
     s6-overlay \
