@@ -155,10 +155,6 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
 RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
   && echo "net.core.wmem_max = 67108864" >> /etc/sysctl.conf \
   && sysctl -p
-
-# dhclient package is not available since alpine 3.21
-RUN echo "@320 http://dl-cdn.alpinelinux.org/alpine/v3.20/main" >> /etc/apk/repositories \
-  && apk --update --no-cache add dhclient@320
   
 RUN apk --update --no-cache add \
     s6-overlay \
