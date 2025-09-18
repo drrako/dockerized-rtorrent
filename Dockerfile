@@ -138,7 +138,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/unrar
 COPY --from=src-unrar /src .
-RUN make -j$(nproc) CXXFLAGS="-O3 -flto"
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
 RUN cp unrar ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
