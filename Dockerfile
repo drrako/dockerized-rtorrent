@@ -90,7 +90,6 @@ RUN cmake . -D CARES_SHARED=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_F
 RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/curl
 COPY --from=src-curl /src .
@@ -98,7 +97,6 @@ RUN cmake . -D ENABLE_ARES=ON -D CURL_LTO=ON -D CURL_USE_OPENSSL=ON -D CURL_BROT
 RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent/libtorrent
 COPY --from=src-libtorrent /src .
@@ -107,7 +105,6 @@ RUN ./configure --enable-aligned --disable-instrumentation
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent/rtorrent
 COPY --from=src-rtorrent /src .
@@ -116,7 +113,6 @@ RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/mktorrent
 COPY --from=src-mktorrent /src .
@@ -127,19 +123,18 @@ RUN echo "USE_OPENSSL = 1" >> Makefile
 RUN make -j$(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/dump-torrent
 COPY --from=src-dump-torrent /src .
 RUN cmake -B build/ -D CMAKE_CXX_COMPILER=g++ -D CMAKE_C_COMPILER=gcc -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="-O3 -flto" -D CMAKE_C_FLAGS="-O3 -flto" -S .
 RUN cmake --build build/ --config Release --clean-first --parallel $(nproc)
 RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/unrar
 COPY --from=src-unrar /src .
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
 RUN cp unrar ${DIST_PATH}/usr/local/bin
+
 RUN tree ${DIST_PATH}
 
 FROM alpine:${ALPINE_VERSION}
