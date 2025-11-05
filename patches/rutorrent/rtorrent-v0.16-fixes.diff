@@ -1,0 +1,30 @@
+diff --git a/js/rtorrent.js b/js/rtorrent.js
+index a137ddba..8eace0b2 100644
+--- a/js/rtorrent.js
++++ b/js/rtorrent.js
+@@ -379,7 +379,8 @@ rTorrentStub.prototype.setsettings = function()
+ 			else
+ 				prm = "auto";
+ 			prmType = "string";
+-			cmd = new rXMLRPCCommand('dht');
++			cmd = new rXMLRPCCommand('dht.mode.set');
++			cmd.addParameter("string",'');
+ 		}
+ 		else
+ 			cmd = new rXMLRPCCommand('set_'+this.ss[i].substr(1));
+diff --git a/php/settings.php b/php/settings.php
+index c8ee7757..62952d40 100644
+--- a/php/settings.php
++++ b/php/settings.php
+@@ -230,7 +230,10 @@ class rTorrentSettings
+ 					$this->apiVersion = $req->val[0];
+ 			}
+ 
+-                        $req = new rXMLRPCRequest( new rXMLRPCCommand("to_kb", floatval(1024)) );
++			$req = new rXMLRPCRequest(new rXMLRPCCommand(
++				"convert.kb",
++				array('',floatval(1024))
++				));
+ 			if($req->run())
+ 			{
+ 				if(!$req->fault)
