@@ -10,7 +10,7 @@
 </div>
 
 ## About
-Alpine docker image with [vanilla rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
+Minimalist docker image with [rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent). Built on top the excellent work done by [crazy-max](https://github.com/crazy-max/docker-rtorrent-rutorrent).
 
 ## Features
 * Multi-platform compact image
