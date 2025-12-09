@@ -5,8 +5,8 @@ ARG CURL_VERSION=8.14.1
 ARG MKTORRENT_VERSION=v1.1
 ARG UNRAR_VERSION=7.1.2
 
-ARG LIBTORRENT_VERSION=v0.16.2
-ARG RTORRENT_VERSION=v0.16.2
+ARG LIBTORRENT_VERSION=v0.16.5
+ARG RTORRENT_VERSION=v0.16.5
 
 ARG RUTORRENT_VERSION=v5.2.10
 
@@ -42,8 +42,8 @@ FROM src AS src-rutorrent
 ARG RUTORRENT_VERSION
 RUN git clone --depth 1 --branch "${RUTORRENT_VERSION}" "https://github.com/Novik/ruTorrent.git" .
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
-COPY patches/rutorrent/*.diff /tmp/patches/rutorrent/
-RUN for patch in /tmp/patches/rutorrent/*.diff; do \
+COPY patch/rutorrent/*.diff /tmp/patch/rutorrent/
+RUN for patch in /tmp/patch/rutorrent/*.diff; do \
       patch -d . -p1 < "$patch"; \
     done
 
