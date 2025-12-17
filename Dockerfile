@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 
-ARG CARES_VERSION=v1.34.5
-ARG CURL_VERSION=8.14.1
+ARG CARES_VERSION=v1.34.6
+ARG CURL_VERSION=8.17.0
 ARG MKTORRENT_VERSION=v1.1
 ARG UNRAR_VERSION=7.1.2
 
-ARG LIBTORRENT_VERSION=v0.15.7
-ARG RTORRENT_VERSION=v0.15.7
+ARG LIBTORRENT_VERSION=v0.16.5
+ARG RTORRENT_VERSION=v0.16.5
 
 ARG RUTORRENT_VERSION=v5.2.10
 
@@ -15,7 +15,7 @@ ARG DUMP_TORRENT_VERSION=v1.7.0
 ARG ALPINE_VERSION=3.22
 
 FROM alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree sed xz
+RUN apk --update --no-cache add curl git tar tree sed xz patch
 WORKDIR /src
 
 FROM src AS src-cares
@@ -42,6 +42,10 @@ FROM src AS src-rutorrent
 ARG RUTORRENT_VERSION
 RUN git clone --depth 1 --branch "${RUTORRENT_VERSION}" "https://github.com/Novik/ruTorrent.git" .
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
+COPY patch/rutorrent/*.diff /tmp/patch/rutorrent/
+RUN for patch in /tmp/patch/rutorrent/*.diff; do \
+      patch -d . -p1 < "$patch"; \
+    done
 
 FROM src AS src-dump-torrent
 ARG DUMP_TORRENT_VERSION
