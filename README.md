@@ -153,6 +153,7 @@ linux/arm64
 | RT_LOG_EXECUTE                 | Log executed commands to /data/rtorrent/log/execute.log                                                    | false                                              |
 | RT_LOG_XMLRPC                  | Log XMLRPC queries to /data/rtorrent/log/xmlrpc.log                                                        | false                                              |
 | RT_SESSION_SAVE_SECONDS        | Seconds between writing torrent information to disk                                                        | 3600                                               |
+| RT_SESSION_FDATASYNC        | Force fdatasync when saving sessions                                                        | false                                               |
 | RT_TRACKER_DELAY_SCRAPE        | Delay tracker announces at startup                                                                         | true                                               |
 | RT_DHT_PORT                    | DHT UDP port (dht.port.set)                                                                                | 6881                                               |
 | RT_INC_PORT                    | Incoming connections (network.port_range.set)                                                              | 50000                                              |
