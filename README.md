@@ -155,7 +155,7 @@ linux/arm64
 | RT_SESSION_SAVE_SECONDS        | Seconds between writing torrent information to disk                                                        | 3600                                               |
 | RT_SESSION_FDATASYNC        | Force fdatasync when saving sessions                                                        | false                                               |
 | RT_TRACKER_DELAY_SCRAPE        | Delay tracker announces at startup                                                                         | true                                               |
-| RT_DHT_PORT                    | DHT UDP port (dht.port.set)                                                                                | 6881                                               |
+| RT_DHT_PORT                    | DHT UDP port (dht.override_port.set)                                                                                | 6881                                               |
 | RT_INC_PORT                    | Incoming connections (network.port_range.set)                                                              | 50000                                              |
 | RT_SEND_BUFFER_SIZE            | Sets default tcp wmem value (network.send_buffer.size.set)                                                 | 4M                                                 |
 | RT_RECEIVE_BUFFER_SIZE         | Sets default tcp rmem value (network.receive_buffer.size.set)                                              | 4M                                                 |
@@ -193,7 +193,7 @@ linux/arm64
 
 ## Ports
 
-* `6881` (or `RT_DHT_PORT`): DHT UDP port (`dht.port.set`)
+* `6881` (or `RT_DHT_PORT`): DHT UDP port (`dht.override_port.set`)
 * `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
 * `8080` (or `RUTORRENT_PORT`): ruTorrent HTTP port
 * `50000` (or `RT_INC_PORT`): Incoming connections (`network.port_range.set`)
@@ -300,7 +300,7 @@ properties of this file:
 * PID file to `/var/run/rtorrent/rtorrent.pid`
 * `network.scgi.open_local`: SCGI local socket and make it group-writable and secure
 * `network.port_range.set`: Listening port for incoming peer traffic (`50000-50000`)
-* `dht.port.set`: UDP port to use for DHT (`6881`)
+* `dht.override_port.set`: UDP port to use for DHT (`6881`)
 * `log.open_file`: Default logging to `/data/rtorrent/log/rtorrent.log`
   * Log level can be modified with the environment variable `RT_LOG_LEVEL`
   * `rpc_events` are logged be default
