@@ -2,7 +2,7 @@
 	<h2>Dockerized rTorrent</h2>
 	<p>                                   
 	  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.16.11&label=rtorrent&style=flat-square" alt="Latest Version"></a>
-	  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.2.10&label=rutorrent&style=flat-square" alt="Latest Version"></a>
+	  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.3.1&label=rutorrent&style=flat-square" alt="Latest Version"></a>
 	  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
 	  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 	</p>
