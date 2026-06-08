@@ -5,22 +5,25 @@ ARG CURL_VERSION=8.17.0
 ARG MKTORRENT_VERSION=v1.1
 ARG UNRAR_VERSION=7.1.2
 
-ARG LIBTORRENT_VERSION=v0.16.11
-ARG RTORRENT_VERSION=v0.16.11
+ARG LIBTORRENT_VERSION=v0.16.13
+ARG RTORRENT_VERSION=v0.16.13
 
-ARG RUTORRENT_VERSION=v5.3.1
+ARG RUTORRENT_VERSION=d888140ffa717be51027988ba6b8403e9e2d0d8e
 
 ARG DUMP_TORRENT_VERSION=v1.7.0
 
 ARG ALPINE_VERSION=3.22
 
 FROM alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree sed xz patch
+RUN apk --update --no-cache add curl git tar tree sed xz
 WORKDIR /src
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN git clone --depth 1 --branch "${CARES_VERSION}" "https://github.com/c-ares/c-ares.git" .
+RUN git init && \
+    git remote add origin "https://github.com/c-ares/c-ares.git" && \
+    git fetch --depth 1 origin "${CARES_VERSION}" && \
+    git checkout FETCH_HEAD
 
 FROM src AS src-curl
 ARG CURL_VERSION
@@ -28,28 +31,39 @@ RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --
 
 FROM src AS src-libtorrent
 ARG LIBTORRENT_VERSION
-RUN git clone --depth 1 --branch "${LIBTORRENT_VERSION}" "https://github.com/rakshasa/libtorrent.git" .
+RUN git init && \
+    git remote add origin "https://github.com/rakshasa/libtorrent.git" && \
+    git fetch --depth 1 origin "${LIBTORRENT_VERSION}" && \
+    git checkout FETCH_HEAD
 
 FROM src AS src-rtorrent
 ARG RTORRENT_VERSION
-RUN git clone --depth 1 --branch "${RTORRENT_VERSION}" "https://github.com/rakshasa/rtorrent.git" .
+RUN git init && \
+    git remote add origin "https://github.com/rakshasa/rtorrent.git" && \
+    git fetch --depth 1 origin "${RTORRENT_VERSION}" && \
+    git checkout FETCH_HEAD
 
 FROM src AS src-mktorrent
 ARG MKTORRENT_VERSION
-RUN git clone --depth 1 --branch "${MKTORRENT_VERSION}" "https://github.com/pobrn/mktorrent.git" .
+RUN git init && \
+    git remote add origin "https://github.com/pobrn/mktorrent.git" && \
+    git fetch --depth 1 origin "${MKTORRENT_VERSION}" && \
+    git checkout FETCH_HEAD
 
 FROM src AS src-rutorrent
 ARG RUTORRENT_VERSION
-RUN git clone --depth 1 --branch "${RUTORRENT_VERSION}" "https://github.com/Novik/ruTorrent.git" .
+RUN git init && \
+    git remote add origin "https://github.com/Novik/ruTorrent.git" && \
+    git fetch --depth 1 origin "${RUTORRENT_VERSION}" && \
+    git checkout FETCH_HEAD
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
-COPY patch/rutorrent/*.diff /tmp/patch/rutorrent/
-RUN for patch in /tmp/patch/rutorrent/*.diff; do \
-      patch -d . -p1 < "$patch"; \
-    done
 
 FROM src AS src-dump-torrent
 ARG DUMP_TORRENT_VERSION
-RUN git clone --depth 1 --branch "${DUMP_TORRENT_VERSION}" "https://github.com/tomcdj71/dumptorrent.git" .
+RUN git init && \
+    git remote add origin "https://github.com/tomcdj71/dumptorrent.git" && \
+    git fetch --depth 1 origin "${DUMP_TORRENT_VERSION}" && \
+    git checkout FETCH_HEAD
 RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
 
