@@ -183,7 +183,6 @@ RUN apk --update --no-cache add \
     nginx \
     openssl \
     php85 \
-    php85-bcmath \
     php85-ctype \
     php85-curl \
     php85-dom \
