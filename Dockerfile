@@ -12,7 +12,7 @@ ARG RUTORRENT_VERSION=d888140ffa717be51027988ba6b8403e9e2d0d8e
 
 ARG DUMP_TORRENT_VERSION=v1.7.0
 
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.24
 
 FROM alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git tar tree sed xz
@@ -90,15 +90,12 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php84-dev \
-    php84-pear \
+    php85-dev \
+    php85-pear \
     tar \
     tree \
     xz \
     zlib-dev
-
-
-RUN ln -s /usr/bin/php84 /usr/bin/php && ln -s /usr/bin/php-config84 /usr/bin/php-config
 
 ENV DIST_PATH="/dist"
 
@@ -185,21 +182,20 @@ RUN apk --update --no-cache add \
     ncurses \
     nginx \
     openssl \
-    php84 \
-    php84-bcmath \
-    php84-ctype \
-    php84-curl \
-    php84-dom \
-    php84-fileinfo \
-    php84-fpm \
-    php84-mbstring \
-    php84-openssl \
-    php84-phar \
-    php84-posix \
-    php84-session \
-    php84-sockets \
-    php84-xml \
-    php84-zip \
+    php85 \
+    php85-ctype \
+    php85-curl \
+    php85-dom \
+    php85-fileinfo \
+    php85-fpm \
+    php85-mbstring \
+    php85-openssl \
+    php85-phar \
+    php85-posix \
+    php85-session \
+    php85-sockets \
+    php85-xml \
+    php85-zip \
     shadow \
     sox \
     tar \
@@ -207,7 +203,6 @@ RUN apk --update --no-cache add \
     unzip \
     util-linux \
     zip \
-  && ln -s /usr/bin/php84 /usr/bin/php \
   && rm -rf /tmp/*
 
 COPY rootfs /

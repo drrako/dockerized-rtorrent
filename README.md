@@ -129,7 +129,7 @@ linux/arm64
 | AUTH_DELAY                     | The time in seconds to wait for Basic Auth                                                                 | 0s                                                 |
 | REAL_IP_FROM                   | Trusted addresses that are known to send correct replacement addresses                                     | 0.0.0.0/32                                         |
 | REAL_IP_HEADER                 | Request header field whose value will be used to replace the client address                                | X-Forwarded-For                                    |
-| LOG_ACCESS                     | Output access log                                                                                          | true                                               |
+| LOG_ACCESS                     | Output access log                                                                                          | false                                              |
 | XMLRPC_AUTHBASIC_STRING        | Message displayed during validation of XMLRPC Basic Auth                                                   | rTorrent XMLRPC restricted access                  |
 | XMLRPC_PORT                    | XMLRPC port through nginx over SCGI socket                                                                 | 8000                                               |
 | XMLRPC_SIZE_LIMIT              | Maximum body size of XMLRPC calls                                                                          | 4M                                                 |
