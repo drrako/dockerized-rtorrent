@@ -1,0 +1,50 @@
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: ${{ fromJSON((github.ref == 'refs/heads/master') && '["linux/amd64","linux/arm64","linux/arm/v7"]' || '["linux/amd64"]') }}
+
+    steps:
+      - name: Prepare
+        id: prepare
+        run: |
+          tag=${{ matrix.platform }}
+          tag=${tag//\//-}
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          platforms: ${{ matrix.platform }}
+          tags: build-${{ steps.prepare.outputs.tag }}
+          cache-from: type=gha,scope=${{ steps.prepare.outputs.tag }}
+          cache-to: type=gha,mode=max,scope=${{ steps.prepare.outputs.tag }}
