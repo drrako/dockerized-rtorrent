@@ -40,8 +40,5 @@ protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
 # Set the umask for this process, which is applied to all files created by the program
 system.umask.set = 0022
 
-# Add a preferred filename encoding to the list
-encoding.add = UTF-8
-
 # Close torrents when diskspace is low
 schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace,1000M))
