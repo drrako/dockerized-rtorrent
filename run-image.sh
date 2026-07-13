@@ -26,6 +26,8 @@ docker run --name drrako-rtorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
   -e RT_DEFAULT_DIR=/media/library \
+  -e RT_LOG_XMLRPC=true \
+  -e RT_LOG_RPC_CALLS=true \
   -p 6881:6881/udp \
   -p 8000:8000 \
   -p 8080:8080 \

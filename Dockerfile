@@ -8,7 +8,7 @@ ARG UNRAR_VERSION=7.2.6
 ARG LIBTORRENT_VERSION=v0.16.17
 ARG RTORRENT_VERSION=v0.16.17
 
-ARG RUTORRENT_VERSION=v5.3.5
+ARG RUTORRENT_VERSION=v5.3.7
 
 ARG DUMP_TORRENT_VERSION=v1.7.0
 
@@ -57,8 +57,6 @@ RUN git init && \
     git fetch --depth 1 origin "${RUTORRENT_VERSION}" && \
     git checkout FETCH_HEAD
 RUN rm -rf .git* conf/users plugins/_cloudflare plugins/mediainfo plugins/screenshots share
-# TODO: remove this line when the issue is fixed in rutorrent
-RUN sed -i '/^rtorrent\.script\.error: fin\.sh$/d' plugins/erasedata/plugin.info 
 
 FROM src AS src-dump-torrent
 ARG DUMP_TORRENT_VERSION
