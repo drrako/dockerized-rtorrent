@@ -4,6 +4,15 @@
 	$httpTimeOut = @RU_HTTP_TIME_OUT@;
 	$httpUseGzip = @RU_HTTP_USE_GZIP@;
 
+	$httpIP = null;
+	$httpProxy = array
+	(
+		'use'	=> false,
+		'proto'	=> 'http',		// 'http' or 'https'
+		'host'	=> 'PROXY_HOST_HERE',
+		'port'	=> 3128
+	);
+
 	// for xmlrpc actions
 	$rpcTimeOut = @RU_RPC_TIME_OUT@;
 	$rpcLogCalls = @RU_LOG_RPC_CALLS@;
@@ -54,9 +63,13 @@
 	$pluginMinification = true; 	
 
 	$localhosts = array(			// list of local interfaces
+		"::1",
 		"127.0.0.1",
 		"localhost",
 	);
+
+	getenv("RU_LOCALHOSTS") && $localhosts[] = $_ENV['RU_LOCALHOSTS'];
+
 	// Path to user profiles
 	$profilePath = '/data/rutorrent/share';
 	// Mask for files and directory creation in user profiles.
