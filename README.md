@@ -1,8 +1,8 @@
 <div align="center">
 	<h2>Dockerized rTorrent</h2>
 	<p>                                   
-	  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.16.17&label=rtorrent&style=flat-square" alt="Latest Version"></a>
-	  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.3.8&label=rutorrent&style=flat-square" alt="Latest Version"></a>
+	  <a href="https://github.com/rakshasa/rtorrent"><img src="https://img.shields.io/github/v/tag/rakshasa/rtorrent?filter=v0.16.18&label=rtorrent&style=flat-square" alt="Latest Version"></a>
+	  <a href="https://github.com/Novik/ruTorrent"><img src="https://img.shields.io/github/v/tag/novik/rutorrent?filter=v5.3.9&label=rutorrent&style=flat-square" alt="Latest Version"></a>
 	  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/image-size/drrako/rtorrent/latest?logo=docker" alt="Docker Size"></a>
 	  <a href="https://hub.docker.com/r/drrako/rtorrent/"><img src="https://img.shields.io/docker/pulls/drrako/rtorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
 	</p>
@@ -156,7 +156,7 @@ linux/arm64
 | RT_SESSION_FDATASYNC        | Force fdatasync when saving sessions                                                        | false                                               |
 | RT_TRACKER_DELAY_SCRAPE        | Delay tracker announces at startup                                                                         | true                                               |
 | RT_DHT_PORT                    | DHT UDP port (dht.override_port.set)                                                                                | 6881                                               |
-| RT_INC_PORT                    | Incoming connections (network.port_range.set)                                                              | 50000                                              |
+| RT_INC_PORT                    | Incoming connections (network.listen.port.range.set)                                                              | 50000                                              |
 | RT_SEND_BUFFER_SIZE            | Sets default tcp wmem value (network.send_buffer.size.set)                                                 | 4M                                                 |
 | RT_RECEIVE_BUFFER_SIZE         | Sets default tcp rmem value (network.receive_buffer.size.set)                                              | 4M                                                 |
 | RT_PREALLOCATE_TYPE            | Sets the type of disk space preallocation                                                                  | 0                                                  |
@@ -196,7 +196,7 @@ linux/arm64
 * `6881` (or `RT_DHT_PORT`): DHT UDP port (`dht.override_port.set`)
 * `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
 * `8080` (or `RUTORRENT_PORT`): ruTorrent HTTP port
-* `50000` (or `RT_INC_PORT`): Incoming connections (`network.port_range.set`)
+* `50000` (or `RT_INC_PORT`): Incoming connections (`network.listen.port.range.set`)
 
 > :warning: Port p+1 defined for `XMLRPC_PORT` and `RUTORRENT_PORT` will also be reserved for
 > healthcheck. (e.g. if you define `RUTORRENT_PORT=8080`, port `8081` will be reserved)
@@ -299,7 +299,7 @@ properties of this file:
 * `session.path.set`: Default session directory (`cfg.session`)
 * PID file to `/var/run/rtorrent/rtorrent.pid`
 * `network.scgi.open_local`: SCGI local socket and make it group-writable and secure
-* `network.port_range.set`: Listening port for incoming peer traffic (`50000-50000`)
+* `network.listen.port.range.set`: Listening port for incoming peer traffic (`50000-50000`)
 * `dht.override_port.set`: UDP port to use for DHT (`6881`)
 * `log.open_file`: Default logging to `/data/rtorrent/log/rtorrent.log`
   * Log level can be modified with the environment variable `RT_LOG_LEVEL`
