@@ -61,7 +61,7 @@ log.open_file = "log",(cat,(cfg.logs),"rtorrent.log")
 log.add_output = "@RT_LOG_LEVEL@","log"
 log.add_output = "rpc_events","log"
 #log.execute = (cat,(cfg.logs),"execute.log")
-#log.xmlrpc = (cat,(cfg.logs),"xmlrpc.log")
+#log.rpc = (cat,(cfg.logs),"xmlrpc.log")
 
 # Initialize plugins after a 10 seconds delay
 schedule = init_plugins, 10, 0, "execute = {sh,-c,/usr/bin/php85 /var/www/rutorrent/php/initplugins.php rtorrent &}"
