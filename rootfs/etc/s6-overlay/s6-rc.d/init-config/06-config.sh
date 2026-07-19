@@ -59,7 +59,7 @@ if [ "${RT_LOG_EXECUTE}" = "true" ]; then
 fi
 if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
-  sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
+  sed -i "s!#log\.rpc.*!log\.rpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 
 # rTorrent config
