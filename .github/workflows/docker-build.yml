@@ -47,4 +47,4 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: build-${{ steps.prepare.outputs.tag }}
           cache-from: type=gha,scope=${{ steps.prepare.outputs.tag }}
-          cache-to: type=gha,mode=max,scope=${{ steps.prepare.outputs.tag }}
+          cache-to: type=gha,mode=max,scope=${{ steps.prepare.outputs.tag }},ignore-error=true
