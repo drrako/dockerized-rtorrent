@@ -1,4 +1,4 @@
-name: Build Image on Label
+name: Build and publish image
 
 on:
   pull_request:
