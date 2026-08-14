@@ -8,19 +8,27 @@ mkdir -p "${CRASH_DIR}"
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
 CRASH_LOG="${CRASH_DIR}/rtorrent-crash-${STAMP}.log"
+GDB_CMD="/tmp/rtorrent-crash-${STAMP}-$$.gdb"
 
-exec gdb -q -batch \
-  -ex "set pagination off" \
-  -ex "set confirm off" \
-  -ex "set print thread-events off" \
-  -ex "run" \
-  -ex "printf \"\n===== rtorrent stopped, generating crash dump =====\n\"" \
-  -ex "set logging file ${CRASH_LOG}" \
-  -ex "set logging overwrite on" \
-  -ex "set logging enabled on" \
-  -ex "thread apply all bt full" \
-  -ex "info registers" \
-  -ex "set logging enabled off" \
-  -ex "printf \"Crash dump written to ${CRASH_LOG}\n\"" \
-  -ex "quit" \
-  --args rtorrent "$@"
+cat > "${GDB_CMD}" <<EOF
+set pagination off
+set confirm off
+set print thread-events off
+run
+if \$_siginfo
+  printf "===== rtorrent crashed, generating crash dump =====\n"
+  set logging file ${CRASH_LOG}
+  set logging overwrite on
+  set logging enabled on
+  thread apply all bt full
+  info registers
+  set logging enabled off
+  printf "Crash dump written to ${CRASH_LOG}\n"
+else
+  printf "rtorrent exited normally\n"
+end
+shell rm -f ${GDB_CMD}
+quit
+EOF
+
+exec gdb -q -batch -x "${GDB_CMD}" --args rtorrent "$@"
