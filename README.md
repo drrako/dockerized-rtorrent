@@ -152,6 +152,8 @@ linux/arm64
 | RT_LOG_LEVEL                   | rTorrent log level                                                                                         | info                                               |
 | RT_LOG_EXECUTE                 | Log executed commands to /data/rtorrent/log/execute.log                                                    | false                                              |
 | RT_LOG_XMLRPC                  | Log XMLRPC queries to /data/rtorrent/log/xmlrpc.log                                                        | false                                              |
+| RT_CRASH_DUMP                  | Run rtorrent under gdb and write a backtrace to /data/rtorrent/log/rtorrent-crash-<timestamp>.log on crash  | false                                              |
+| RT_CRASH_DIR                   | Directory where rtorrent crash dumps are written                                                            | /data/rtorrent/log                                 |
 | RT_SESSION_SAVE_SECONDS        | Seconds between writing torrent information to disk                                                        | 3600                                               |
 | RT_SESSION_FDATASYNC        | Force fdatasync when saving sessions                                                        | false                                               |
 | RT_TRACKER_DELAY_SCRAPE        | Delay tracker announces at startup                                                                         | true                                               |
@@ -306,6 +308,11 @@ properties of this file:
   * `rpc_events` are logged be default
   * To log executed commands, add the environment variable `RT_LOG_EXECUTE`
   * To log XMLRPC queries, add the environment variable `RT_LOG_XMLRPC`
+* Crash dumps: when `RT_CRASH_DUMP=true`, rtorrent runs under gdb and on crash a full
+  backtrace of all threads plus the registers is written to `/data/rtorrent/log/rtorrent-crash-<timestamp>.log`
+  (also echoed to the container logs). The dump directory is tunable with `RT_CRASH_DIR`.
+  The service is then restarted automatically by s6. Note that while enabled, the process
+  is started through gdb, which slightly changes signal handling on shutdown.
 
 ### Override or add a ruTorrent plugin/theme
 

@@ -2,9 +2,15 @@
 # shellcheck shell=sh
 export HOME=/data/rtorrent
 export PWD=/data/rtorrent
+RTORRENT_BIN="rtorrent"
+if [ "${RT_CRASH_DUMP}" = "true" ]; then
+    RTORRENT_BIN="/usr/local/bin/rtorrent-crash-handler"
+    echo "Running rtorrent under gdb, crash dumps will be written to ${RT_CRASH_DIR:-/data/rtorrent/log}"
+fi
+
 if [ -z "${WAN_IP}" ]; then
-    exec s6-setuidgid rtorrent rtorrent -o import=/etc/rtorrent/.rtlocal.rc
+    exec s6-setuidgid rtorrent "${RTORRENT_BIN}" -o import=/etc/rtorrent/.rtlocal.rc
 else
     echo "Running rtorrent with enforced WAN IP ${WAN_IP}"
-    exec s6-setuidgid rtorrent rtorrent -o import=/etc/rtorrent/.rtlocal.rc -o network.local_address.set=${WAN_IP}
+    exec s6-setuidgid rtorrent "${RTORRENT_BIN}" -o import=/etc/rtorrent/.rtlocal.rc -o network.local_address.set=${WAN_IP}
 fi

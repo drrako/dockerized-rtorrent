@@ -1,0 +1,26 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+export HOME=/data/rtorrent
+export PWD=/data/rtorrent
+
+CRASH_DIR="${RT_CRASH_DIR:-/data/rtorrent/log}"
+mkdir -p "${CRASH_DIR}"
+
+STAMP="$(date +%Y%m%d-%H%M%S)"
+CRASH_LOG="${CRASH_DIR}/rtorrent-crash-${STAMP}.log"
+
+exec gdb -q -batch \
+  -ex "set pagination off" \
+  -ex "set confirm off" \
+  -ex "set print thread-events off" \
+  -ex "run" \
+  -ex "printf \"\n===== rtorrent stopped, generating crash dump =====\n\"" \
+  -ex "set logging file ${CRASH_LOG}" \
+  -ex "set logging overwrite on" \
+  -ex "set logging enabled on" \
+  -ex "thread apply all bt full" \
+  -ex "info registers" \
+  -ex "set logging enabled off" \
+  -ex "printf \"Crash dump written to ${CRASH_LOG}\n\"" \
+  -ex "quit" \
+  --args rtorrent "$@"

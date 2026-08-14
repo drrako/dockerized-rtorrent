@@ -176,6 +176,7 @@ RUN apk --update --no-cache add \
     ca-certificates \
     coreutils \
     findutils \
+    gdb \
     grep \
     gzip \
     libstdc++ \
