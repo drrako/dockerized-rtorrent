@@ -193,6 +193,7 @@ RUN apk --update --no-cache add \
     php85-phar \
     php85-posix \
     php85-session \
+    php85-sqlite3 \
     php85-sockets \
     php85-xml \
     php85-zip \
