@@ -5,10 +5,10 @@ ARG CURL_VERSION=8.20.0
 ARG MKTORRENT_VERSION=v1.1
 ARG UNRAR_VERSION=7.2.6
 
-ARG LIBTORRENT_VERSION=v0.16.18
-ARG RTORRENT_VERSION=v0.16.18
+ARG LIBTORRENT_VERSION=v0.16.22
+ARG RTORRENT_VERSION=v0.16.22
 
-ARG RUTORRENT_VERSION=v5.3.11
+ARG RUTORRENT_VERSION=v5.3.14
 
 ARG DUMP_TORRENT_VERSION=v1.7.0
 
@@ -193,6 +193,7 @@ RUN apk --update --no-cache add \
     php85-phar \
     php85-posix \
     php85-session \
+    php85-sqlite3 \
     php85-sockets \
     php85-xml \
     php85-zip \
