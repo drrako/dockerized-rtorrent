@@ -149,7 +149,7 @@ linux/arm64
 | Variable Name                  | Description                                                                                                 | Default Value                                      |
 |------------------------------- |------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
 | RT_DEFAULT_DIR                 | Sets the default download directory                                                                        | /downloads                                         |
-| RT_LOG_LEVEL                   | rTorrent log level                                                                                         | info                                               |
+| RT_LOG_LEVEL                   | rTorrent log output filter (`errors`, `events`, or `debug_trace`)                                           | events                                             |
 | RT_LOG_EXECUTE                 | Log executed commands to /data/rtorrent/log/execute.log                                                    | false                                              |
 | RT_LOG_XMLRPC                  | Log XMLRPC queries to /data/rtorrent/log/xmlrpc.log                                                        | false                                              |
 | RT_SESSION_SAVE_SECONDS        | Seconds between writing torrent information to disk                                                        | 3600                                               |
