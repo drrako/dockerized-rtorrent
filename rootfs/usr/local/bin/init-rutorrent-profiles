@@ -15,13 +15,15 @@ esac
 
 profiles=${RUTORRENT_PROFILE_USERS:-}
 if [ -n "$profiles" ]; then
-	profiles=$(printf '%s\n' "$profiles" | tr ',' '\n')
+	# Whitespace around list entries is formatting, not part of the username.
+	profiles=$(printf '%s\n' "$profiles" | tr ',' '\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//; /^$/d')
 elif [ -r "$AUTH_FILE" ] && [ -s "$AUTH_FILE" ]; then
-	profiles=$(awk -F: 'NF >= 2 && $1 !~ /^[[:space:]]*#/ { print $1 }' "$AUTH_FILE")
+	# Preserve htpasswd usernames exactly, including leading/trailing whitespace.
+	profiles=$(awk -F: 'NF >= 2 && $1 != "" && $1 !~ /^#/ { print $1 }' "$AUTH_FILE")
 fi
 
 # No configured users means the UI is using ruTorrent's default profile.
-if [ -z "$(printf '%s' "$profiles" | tr -d '[:space:]')" ]; then
+if [ -z "$profiles" ]; then
 	exec env REMOTE_USER= "$PHP_BIN" "$INITPLUGINS_SCRIPT"
 fi
 
@@ -30,7 +32,6 @@ fi
 export LC_ALL=C
 seen=' '
 printf '%s\n' "$profiles" | while IFS= read -r username; do
-	username=$(printf '%s' "$username" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
 	[ -n "$username" ] || continue
 	profile=$(printf '%s' "$username" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9_-]/_/g')
 	[ -n "$profile" ] || continue

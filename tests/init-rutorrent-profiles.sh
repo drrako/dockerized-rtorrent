@@ -44,15 +44,41 @@ if grep -q 'hash-' "$CALLS_FILE"; then
 	exit 1
 fi
 
-# An explicit list overrides htpasswd discovery and is normalized/deduplicated.
-RUTORRENT_PROFILE_USERS='Carol,D@ve,carol'
+# Preserve htpasswd whitespace: ruTorrent replaces it with underscores,
+# including whitespace before a '#' that is part of the username.
+printf ' Alice :hash-a\nbob :hash-b\n\tCarol\t:hash-c\n #D@ve :hash-d\n_alice_:hash-e\n:ignored\n' > "$RUTORRENT_HTPASSWD_FILE"
+: > "$CALLS_FILE"
+"$helper"
+printf '%s\t_alice_\n%s\tbob_\n%s\t_carol_\n%s\t__d_ve_\n' \
+	"$RUTORRENT_INITPLUGINS_SCRIPT" "$RUTORRENT_INITPLUGINS_SCRIPT" \
+	"$RUTORRENT_INITPLUGINS_SCRIPT" "$RUTORRENT_INITPLUGINS_SCRIPT" > "$tmp/expected"
+cmp "$tmp/expected" "$CALLS_FILE"
+
+# Even a whitespace-only htpasswd username selects a named profile.
+printf ' \t :hash-space\n' > "$RUTORRENT_HTPASSWD_FILE"
+: > "$CALLS_FILE"
+"$helper"
+printf '%s\t___\n' "$RUTORRENT_INITPLUGINS_SCRIPT" > "$tmp/expected"
+cmp "$tmp/expected" "$CALLS_FILE"
+
+# An explicit list overrides htpasswd discovery, trims separator whitespace,
+# and is normalized/deduplicated.
+RUTORRENT_PROFILE_USERS=' Carol , D@ve, carol, , '
 export RUTORRENT_PROFILE_USERS
 : > "$CALLS_FILE"
 "$helper"
 printf '%s\tcarol\n%s\td_ve\n' "$RUTORRENT_INITPLUGINS_SCRIPT" "$RUTORRENT_INITPLUGINS_SCRIPT" > "$tmp/expected"
 cmp "$tmp/expected" "$CALLS_FILE"
 
+# An explicit list with only empty entries initializes the default profile.
+RUTORRENT_PROFILE_USERS=' , , '
+: > "$CALLS_FILE"
+"$helper"
+printf '%s\n' "$RUTORRENT_INITPLUGINS_SCRIPT" > "$tmp/expected"
+cmp "$tmp/expected" "$CALLS_FILE"
+
 # RU_FORBID_USER_SETTINGS collapses profile identity, so initialize default once.
+RUTORRENT_PROFILE_USERS='alice,bob'
 RU_FORBID_USER_SETTINGS=true
 export RU_FORBID_USER_SETTINGS
 : > "$CALLS_FILE"
