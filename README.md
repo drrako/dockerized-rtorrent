@@ -134,6 +134,7 @@ linux/arm64
 | XMLRPC_PORT                    | XMLRPC port through nginx over SCGI socket                                                                 | 8000                                               |
 | XMLRPC_SIZE_LIMIT              | Maximum body size of XMLRPC calls                                                                          | 4M                                                 |
 | RUTORRENT_AUTHBASIC_STRING     | Message displayed during validation of ruTorrent Basic Auth                                                | ruTorrent restricted access                        |
+| RUTORRENT_PROFILE_USERS        | Comma-separated ruTorrent profile names when auth is managed externally; otherwise users are read from `rutorrent.htpasswd` | (auto-detected)                               |
 | RUTORRENT_PORT                 | ruTorrent HTTP port                                                                                        | 8080                                               |
 
 ### Nginx
@@ -280,6 +281,14 @@ Htpasswd files used:
 
 * `rpc.htpasswd`: XMLRPC through nginx
 * `rutorrent.htpasswd`: ruTorrent basic auth
+
+At startup, profile initialization reads the usernames from `rutorrent.htpasswd`
+so each authenticated ruTorrent user gets their own profile-specific plugin
+handlers. If authentication is managed by a reverse proxy, set
+`RUTORRENT_PROFILE_USERS` to a comma-separated list of the usernames the proxy
+passes to ruTorrent. With no configured users, ruTorrent initializes the
+unnamed default profile. New users added after startup require a container
+restart to initialize their plugin handlers.
 
 ### Bootstrap config `.rtlocal.rc`
 
